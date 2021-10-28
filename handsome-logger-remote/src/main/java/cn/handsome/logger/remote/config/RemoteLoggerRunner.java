@@ -1,9 +1,9 @@
-package cn.handsome.log.config;
+package cn.handsome.logger.remote.config;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import cn.handsome.log.RemoteLoggerManager;
-import cn.handsome.log.appender.RemoteAppender;
+import cn.handsome.logger.remote.RemoteLoggerManager;
+import cn.handsome.logger.remote.appender.RemoteAppender;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.impl.StaticLoggerBinder;
 import org.springframework.beans.factory.annotation.Autowired;

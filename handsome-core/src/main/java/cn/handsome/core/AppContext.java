@@ -12,13 +12,13 @@ import java.util.List;
  * @date 2021/4/12
  */
 @RequiredArgsConstructor
-public class Context {
+public class AppContext {
     private final String appName;
     private String appMode;
-    private static Context instance;
+    private static AppContext instance;
 
     public static void init(String appName) {
-        instance = new Context(appName);
+        instance = new AppContext(appName);
     }
 
     public static String getAppName() {

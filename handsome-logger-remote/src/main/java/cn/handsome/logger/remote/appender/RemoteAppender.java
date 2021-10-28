@@ -1,10 +1,10 @@
-package cn.handsome.log.appender;
+package cn.handsome.logger.remote.appender;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.AppenderBase;
-import cn.handsome.log.RemoteLoggerManager;
+import cn.handsome.logger.remote.RemoteLoggerManager;
 import cn.hutool.core.util.ArrayUtil;
 import cn.handsome.core.utils.CommonUtils;
 import org.slf4j.event.Level;

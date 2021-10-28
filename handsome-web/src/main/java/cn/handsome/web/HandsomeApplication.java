@@ -1,7 +1,7 @@
 package cn.handsome.web;
 
 import cn.handsome.core.Constants;
-import cn.handsome.core.Context;
+import cn.handsome.core.AppContext;
 import cn.handsome.core.launcher.LauncherManager;
 import cn.handsome.core.utils.CommonUtils;
 import org.springframework.boot.SpringApplication;
@@ -58,7 +58,7 @@ public class HandsomeApplication extends SpringApplication {
     public static String getMode() {
         HandsomeApplication app = getCurrent();
         if (null == app) {
-            return Context.getAppMode(null);
+            return AppContext.getAppMode(null);
         }
         return getMode(app.getEnvironment());
     }
@@ -66,7 +66,7 @@ public class HandsomeApplication extends SpringApplication {
     public static String getMode(ConfigurableEnvironment environment) {
         // 获取配置的环境变量
         String[] activeProfiles = environment.getActiveProfiles();
-        return Context.getAppMode(activeProfiles);
+        return AppContext.getAppMode(activeProfiles);
     }
 
     /**
@@ -159,7 +159,7 @@ public class HandsomeApplication extends SpringApplication {
 
     public static ConfigurableApplicationContext run(String appName, Class<?> source, String... args) {
         Assert.hasText(appName, "[appName]不能为空");
-        Context.init(appName);
+        AppContext.init(appName);
         LauncherManager manager = LauncherManager.getInstance();
         manager.preLoad();
 

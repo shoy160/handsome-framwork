@@ -1,6 +1,5 @@
 package cn.handsome.sdk.payment.config;
 
-import cn.handsome.core.Context;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

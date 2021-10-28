@@ -8,7 +8,7 @@
         <version>1.1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>handsome-log</artifactId>
+    <artifactId>handsome-logger-remote</artifactId>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
     <dependencies>
@@ -34,6 +34,8 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
     <build>
         <plugins>

@@ -1,14 +1,14 @@
-package cn.handsome.log;
+package cn.handsome.logger.remote;
 
 import ch.qos.logback.core.net.DefaultSocketConnector;
 import ch.qos.logback.core.net.SocketConnector;
-import cn.handsome.log.config.LoggerProperties;
-import cn.hutool.core.thread.ThreadFactoryBuilder;
-import cn.handsome.core.lang.Action;
+import cn.handsome.core.logger.LoggerHandler;
 import cn.handsome.core.utils.CommonUtils;
 import cn.handsome.core.utils.JsonUtils;
 import cn.handsome.core.utils.MapUtils;
 import cn.handsome.core.utils.TypeUtils;
+import cn.handsome.logger.remote.config.RemoteLoggerProperties;
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.event.Level;
 
@@ -18,8 +18,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -32,25 +30,21 @@ import java.util.concurrent.*;
 @Slf4j
 public class RemoteLoggerManager {
     private final static String CHARSET = "utf-8";
-    private final LoggerProperties config;
+    private final RemoteLoggerProperties config;
+    private final LoggerHandler[] handlers;
     private final BlockingDeque<String> messageQueue;
-    private final List<Action<Map<String, Object>>> messageHandlers;
 
-    public void setMessageHandler(Action<Map<String, Object>> messageHandler) {
-        this.messageHandlers.add(messageHandler);
-    }
-
-    public RemoteLoggerManager(LoggerProperties config) {
+    public RemoteLoggerManager(RemoteLoggerProperties config, LoggerHandler[] handlers) {
         if (config == null
                 || CommonUtils.isEmpty(config.getHost())
                 || config.getPort() == 0) {
-            this.config = new LoggerProperties();
+            this.config = new RemoteLoggerProperties();
             log.info("missing remote logger config");
         } else {
             this.config = config;
         }
+        this.handlers = handlers;
         this.messageQueue = new LinkedBlockingDeque<>(this.config.getQueueSize());
-        this.messageHandlers = new LinkedList<>();
         this.start();
     }
 
@@ -81,10 +75,10 @@ public class RemoteLoggerManager {
         if (CommonUtils.isNotEmpty(config.getAppName())) {
             map.put("app", config.getAppName());
         }
-        if (CommonUtils.isNotEmpty(this.messageHandlers)) {
-            for (Action<Map<String, Object>> handler : this.messageHandlers) {
+        if (CommonUtils.isNotEmpty(this.handlers)) {
+            for (LoggerHandler handler : this.handlers) {
                 try {
-                    handler.invoke(map);
+                    handler.complete(map);
                 } catch (Exception ex) {
                     log.warn("message handler load error:{}", ex.getMessage());
                 }

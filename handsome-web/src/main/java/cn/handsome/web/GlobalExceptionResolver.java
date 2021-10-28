@@ -1,12 +1,12 @@
 package cn.handsome.web;
 
-import cn.handsome.core.Context;
-import cn.hutool.core.util.ArrayUtil;
 import cn.handsome.core.Constants;
+import cn.handsome.core.AppContext;
 import cn.handsome.core.domain.dto.ResultDTO;
 import cn.handsome.core.enums.ResultCode;
 import cn.handsome.core.exception.BusinessException;
-import cn.handsome.log.RemoteLogger;
+import cn.handsome.core.logger.Logger;
+import cn.hutool.core.util.ArrayUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -37,29 +37,16 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionResolver {
     private final MessageSource messageSource;
-    private RemoteLogger remoteLogger;
+    private Logger logger;
 
     @Autowired(required = false)
-    public void setRemoteLogger(RemoteLogger logger) {
-        this.remoteLogger = logger;
+    public void setLogger(Logger logger) {
+        this.logger = logger;
     }
 
     @Autowired
     public GlobalExceptionResolver(MessageSource messageSource) {
         this.messageSource = messageSource;
-    }
-
-    private void sendToRemote(Throwable throwable) {
-        if (this.remoteLogger == null || !this.remoteLogger.isErrorEnabled()) {
-            return;
-        }
-        try {
-            Map<String, Object> msg = new HashMap<>();
-            msg.put("message", throwable.getMessage());
-            this.remoteLogger.error(msg, throwable);
-        } catch (Exception ex) {
-            log.warn("remote logger send error", ex);
-        }
     }
 
     /**
@@ -72,9 +59,13 @@ public class GlobalExceptionResolver {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        sendToRemote(ex);
+        if (null != logger) {
+            Map<String, Object> msg = new HashMap<>(1);
+            msg.put("message", ex.getMessage());
+            logger.error(msg, ex);
+        }
         ResultDTO<?> result;
-        if (Context.isProd()) {
+        if (AppContext.isProd()) {
             result = ResultDTO.fail(ResultCode.INTERNAL_SERVER_ERROR);
         } else {
             result = ResultDTO.fail(ResultCode.INTERNAL_SERVER_ERROR, ex.getMessage());
@@ -94,7 +85,7 @@ public class GlobalExceptionResolver {
         if (ArrayUtil.isEmpty(fieldErrors)) {
             return Constants.EMPTY_STR;
         }
-        if (Context.isProd()) {
+        if (AppContext.isProd()) {
             return resolveLocalizedErrorMessage(fieldErrors.get(0));
         }
         StringBuilder sb = new StringBuilder();

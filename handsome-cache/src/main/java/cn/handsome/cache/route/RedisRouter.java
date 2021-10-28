@@ -1,6 +1,6 @@
 package cn.handsome.cache.route;
 
-import cn.handsome.core.Context;
+import cn.handsome.core.AppContext;
 import cn.handsome.core.cache.impl.MemoryCache;
 import cn.handsome.core.micro.ServiceAddress;
 import cn.handsome.core.micro.route.RouterFinder;
@@ -32,7 +32,7 @@ public class RedisRouter implements RouterRegister, RouterFinder {
     }
 
     private static String serviceKey(String name) {
-        String mode = Context.isProd() ? "prod" : (Context.isTest() ? "test" : "dev");
+        String mode = AppContext.isProd() ? "prod" : (AppContext.isTest() ? "test" : "dev");
         return String.format("thrift:%s:%s", mode, name);
     }
 

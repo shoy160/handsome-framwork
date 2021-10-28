@@ -1,8 +1,8 @@
 package cn.handsome.web.config;
 
-import cn.handsome.web.filter.AuthInterceptor;
 import cn.handsome.core.security.TokenSolver;
 import cn.handsome.core.security.TokenVerify;
+import cn.handsome.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -36,7 +35,6 @@ public class HandsomeMvcConfig implements WebMvcConfigurer {
     private final static String STR_SPLIT = ",";
 
 
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor(tokenSolver, tokenVerify))
@@ -45,7 +43,7 @@ public class HandsomeMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(@Nonnull CorsRegistry registry) {
+    public void addCorsMappings(CorsRegistry registry) {
         if (!config.isEnableCors()) {
             return;
         }

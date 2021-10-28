@@ -1,6 +1,6 @@
 package cn.handsome.nacos.route;
 
-import cn.handsome.core.Context;
+import cn.handsome.core.AppContext;
 import cn.handsome.core.cache.Cache;
 import cn.handsome.core.cache.impl.MemoryCache;
 import cn.handsome.core.enums.ServiceProtocol;
@@ -64,7 +64,7 @@ public class NacosRouter implements RouterRegister, RouterFinder {
         }
         try {
             List<String> clusters = new ArrayList<>();
-            clusters.add(Context.getAppMode());
+            clusters.add(AppContext.getAppMode());
             List<Instance> instances = namingService.selectInstances(serviceName, clusters, true);
             for (Instance instance : instances) {
                 ServiceAddress address = new ServiceAddress(instance.getIp(), instance.getPort());
@@ -102,7 +102,7 @@ public class NacosRouter implements RouterRegister, RouterFinder {
             if (StrUtil.isEmpty(address.getService())) {
                 return;
             }
-            String mode = Context.getAppMode();
+            String mode = AppContext.getAppMode();
             Instance instance = new Instance();
             instance.setHealthy(address.isHealthy());
             instance.setEphemeral(false);

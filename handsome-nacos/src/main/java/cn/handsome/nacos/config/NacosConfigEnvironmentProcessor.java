@@ -1,7 +1,7 @@
 package cn.handsome.nacos.config;
 
 import cn.handsome.core.Constants;
-import cn.handsome.core.Context;
+import cn.handsome.core.AppContext;
 import cn.handsome.nacos.utils.NacosHelper;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.SpringApplication;
@@ -53,8 +53,8 @@ public class NacosConfigEnvironmentProcessor implements EnvironmentPostProcessor
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        String appName = Context.getAppName();
-        String mode = Context.getAppMode(environment.getActiveProfiles());
+        String appName = AppContext.getAppName();
+        String mode = AppContext.getAppMode(environment.getActiveProfiles());
         Binder binder = Binder.get(environment);
         BindResult<NacosProperties> configResult = binder.bind("handsome.nacos", NacosProperties.class);
         NacosProperties nacosConfig = configResult.orElse(new NacosProperties());

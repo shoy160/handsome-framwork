@@ -1,7 +1,7 @@
-package cn.handsome.log.logger;
+package cn.handsome.logger.remote.logger;
 
-import cn.handsome.log.RemoteLogger;
-import cn.handsome.log.RemoteLoggerManager;
+import cn.handsome.logger.remote.RemoteLogger;
+import cn.handsome.logger.remote.RemoteLoggerManager;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.event.Level;
 

@@ -8,8 +8,8 @@ import cn.handsome.core.utils.CommonUtils;
 import cn.handsome.core.utils.IdentityUtils;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.nacos.api.config.annotation.NacosValue;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Date;
 
@@ -23,10 +23,10 @@ public class HandsomeTokenVerify implements TokenVerify {
     private final Cache<String, String> cache;
     private final static String DEFAULT_FORBIDDEN_VALUE = "1";
 
-    @NacosValue(value = "${handsome.web.single_marking:^framework:token:marking}", autoRefreshed = true)
+    @Value(value = "${handsome.web.single_marking:^framework:token:marking}")
     private String singleMarking;
 
-    @NacosValue(value = "${handsome.web.user_forbidden:^framework:token:forbidden}", autoRefreshed = true)
+    @Value(value = "${handsome.web.user_forbidden:^framework:token:forbidden}")
     private String userForbidden;
 
     @Override

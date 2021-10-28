@@ -1,4 +1,4 @@
-package cn.handsome.log.config;
+package cn.handsome.logger.remote.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,20 +16,20 @@ import org.springframework.stereotype.Component;
 @Component
 @Configuration
 @ConfigurationProperties(prefix = "handsome.logger")
-public class LoggerProperties {
+public class RemoteLoggerProperties {
 
     /**
      * 是否开启,default:true
      */
-    private boolean enable = true;
+    private boolean enable = false;
     /**
      * 远程地址
      */
-    private String host = "192.168.2.211";
+    private String host = "127.0.0.1";
     /**
      * 远程端口
      */
-    private Integer port = 18610;
+    private Integer port = 8610;
     /**
      * 项目名
      */

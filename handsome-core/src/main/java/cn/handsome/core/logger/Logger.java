@@ -1,4 +1,4 @@
-package cn.handsome.log;
+package cn.handsome.core.logger;
 
 
 import cn.handsome.core.utils.CommonUtils;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @author shay
  * @date 2021/4/2
  */
-public interface RemoteLogger {
+public interface Logger {
 
     /**
      * 是否开启日志等级

@@ -1,6 +1,6 @@
 package cn.handsome.sdk.im.client.impl;
 
-import cn.handsome.core.Context;
+import cn.handsome.core.AppContext;
 import cn.handsome.core.http.HttpClientFactory;
 import cn.handsome.core.http.HttpClientFilter;
 import cn.handsome.core.utils.CommonUtils;
@@ -64,7 +64,7 @@ public class DefaultImClientImpl implements ImClient {
 
     @Override
     public String generateId(String businessId) {
-        if (Context.isProd() || businessId.startsWith(TEST_ACCOUNT_PREFIX) || businessId.startsWith(IM_ACCOUNT_PREFIX)) {
+        if (AppContext.isProd() || businessId.startsWith(TEST_ACCOUNT_PREFIX) || businessId.startsWith(IM_ACCOUNT_PREFIX)) {
             return businessId;
         }
         return String.format("%s%s", TEST_ACCOUNT_PREFIX, businessId);

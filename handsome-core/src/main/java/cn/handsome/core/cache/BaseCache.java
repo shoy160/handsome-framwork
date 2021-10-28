@@ -1,7 +1,7 @@
 package cn.handsome.core.cache;
 
 import cn.handsome.core.Constants;
-import cn.handsome.core.Context;
+import cn.handsome.core.AppContext;
 import cn.handsome.core.lang.Action;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -36,7 +36,7 @@ public abstract class BaseCache<K, V> implements Cache<K, V> {
     public String getRegion() {
         if (StrUtil.isBlank(this.region)) {
             //默认区域去 AppName
-            String appName = Context.getAppName();
+            String appName = AppContext.getAppName();
             if (StrUtil.isNotBlank(appName)) {
                 return appName.replaceFirst("^handsome-", Constants.EMPTY_STR);
             }
