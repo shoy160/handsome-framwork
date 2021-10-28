@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>cn.handsome.framework</groupId>
-            <artifactId>handsome-mq</artifactId>
+            <artifactId>handsome-rocket</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.handsome.framework</groupId>

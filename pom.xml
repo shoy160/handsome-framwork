@@ -6,7 +6,7 @@
     <parent>
         <artifactId>spring-boot-starter-parent</artifactId>
         <groupId>org.springframework.boot</groupId>
-        <version>2.4.6</version>
+        <version>2.5.6</version>
     </parent>
     <groupId>cn.handsome.framework</groupId>
     <artifactId>framework</artifactId>
@@ -19,8 +19,8 @@
     <properties>
         <version.framework>1.1.5</version.framework>
         <version.java>1.8</version.java>
-        <version.springboot>2.4.6</version.springboot>
-        <version.hutool>5.5.9</version.hutool>
+        <version.springboot>2.5.6</version.springboot>
+        <version.hutool>5.7.15</version.hutool>
         <version.compile>8</version.compile>
         <skipTests>true</skipTests>
     </properties>
@@ -31,13 +31,13 @@
         <module>handsome-log</module>
         <module>handsome-cache</module>
         <module>handsome-thrift</module>
-        <module>handsome-rocketmq</module>
+        <module>handsome-rocket</module>
         <module>handsome-rabbit</module>
         <module>handsome-nacos</module>
         <module>handsome-sdk-im</module>
         <module>handsome-sdk-payment</module>
-        <module>handsome-swagger</module>
-        <module>sample</module>
+<!--        <module>handsome-swagger</module>-->
+<!--        <module>sample</module>-->
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -68,7 +68,7 @@
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
-                <artifactId>handsome-mq</artifactId>
+                <artifactId>handsome-rocket</artifactId>
                 <version>${version.framework}</version>
             </dependency>
             <dependency>
