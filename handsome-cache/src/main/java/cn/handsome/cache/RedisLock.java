@@ -27,7 +27,7 @@ public class RedisLock {
     }
 
     public void tryLock(String key, long timeout, ActionVoid action) {
-        if (null == action) {
+        if (null == action || null == redissonClient) {
             return;
         }
         RLock lock = redissonClient.getLock(key);

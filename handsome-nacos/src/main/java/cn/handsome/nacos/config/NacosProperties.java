@@ -16,13 +16,23 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "handsome.nacos")
 public class NacosProperties {
     /**
+     * 是否开启
+     */
+    private boolean enable = false;
+
+    /**
+     * 是否远程优先
+     */
+    private boolean remoteFirst = true;
+
+    /**
      * 服务地址
      */
-    private String serverAddr = "192.168.2.211:31871";
+    private String serverAddr = "127.0.0.1:8838";
     /**
      * 命名空间
      */
-    private String namespace = "7e58bc09-2ccf-42d9-805b-690e18dc659e";
+    private String namespace = "DEFAULT_GROUP";
 
     /**
      * 配置

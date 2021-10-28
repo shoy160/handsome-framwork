@@ -7,8 +7,8 @@ import cn.handsome.demo.client.UserCmd;
 import cn.handsome.demo.client.UserRpcService;
 import cn.handsome.demo.web.event.TestEvent;
 import cn.handsome.demo.web.property.DemoProperties;
-import cn.handsome.rocketmq.MessageBuilder;
 import cn.handsome.rabbit.RabbitClient;
+import cn.handsome.rocketmq.MessageBuilder;
 import cn.handsome.sdk.payment.PaymentClient;
 import cn.handsome.sdk.payment.entity.PayInputDTO;
 import cn.handsome.sdk.payment.enums.PaymentMode;
@@ -17,7 +17,6 @@ import cn.handsome.thrift.client.ThriftClient;
 import cn.handsome.web.annotation.EnableAuth;
 import cn.hutool.core.util.RandomUtil;
 import com.aliyun.openservices.ons.api.Message;
-import com.aliyun.openservices.ons.api.bean.ProducerBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "Common", tags = "通用服务")
 public class CommonRest extends BaseAppRest {
     private final PaymentClient paymentClient;
-    private final ProducerBean producerBean;
     private final Session session;
     private final ThriftClient<UserRpcService.Client> userClient;
     private final RabbitClient rabbitClient;
@@ -69,17 +67,6 @@ public class CommonRest extends BaseAppRest {
         inputDTO.setTitle("订单支付测试");
         ResultDTO<String> result = paymentClient.createPayment(PaymentMode.Alipay, PaymentType.App, inputDTO);
         return result;
-    }
-
-    @GetMapping("mq")
-    @ApiOperation(value = "RocketMQ测试", notes = "RocketMQ测试")
-    public ResultDTO<?> rocketMqTest() {
-        Message message = new MessageBuilder("sysmsg")
-                .setBody("shay")
-                .setDelayMinutes(2)
-                .build();
-        producerBean.send(message);
-        return success();
     }
 
     @GetMapping("info")

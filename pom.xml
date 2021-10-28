@@ -36,8 +36,8 @@
         <module>handsome-nacos</module>
         <module>handsome-sdk-im</module>
         <module>handsome-sdk-payment</module>
-<!--        <module>handsome-swagger</module>-->
-<!--        <module>sample</module>-->
+        <module>handsome-swagger</module>
+        <module>sample</module>
     </modules>
     <dependencyManagement>
         <dependencies>

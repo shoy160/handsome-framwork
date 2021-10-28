@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RestController("OpenImRest")
+//@RestController("OpenImRest")
 @RequestMapping("manage/im")
 @Api(value = "OpenImRest", tags = "IM服务")
 @EnableAuth(anonymous = true, group = Constants.GROUP_MANAGE)

@@ -17,7 +17,7 @@ import java.util.Properties;
 @Setter
 @Component
 @ConfigurationProperties(prefix = "handsome.rocket")
-public class RocketMqProperties {
+public class HandsomeRocketMqProperties {
     /**
      * Name Service
      */

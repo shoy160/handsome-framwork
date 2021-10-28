@@ -65,8 +65,8 @@ public class NacosConfigEnvironmentProcessor implements EnvironmentPostProcessor
                 //Nacos配置中心
                 props.setProperty("nacos.config.server-addr", nacosConfig.getServerAddr());
                 props.setProperty("nacos.config.namespace", nacosConfig.getNamespace());
-                props.setProperty("nacos.config.bootstrap.enable", "true");
-                props.setProperty("nacos.config.bootstrap.remote-first", "true");
+                props.setProperty("nacos.config.bootstrap.enable", String.valueOf(nacosConfig.isEnable()));
+                props.setProperty("nacos.config.bootstrap.remote-first", String.valueOf(nacosConfig.isRemoteFirst()));
                 props.setProperty("nacos.config.auto-refresh", String.valueOf(config.isAutoRefresh()));
                 props.setProperty("nacos.config.group", config.getGroup());
                 final String applicationConfig = "application";
@@ -81,16 +81,6 @@ public class NacosConfigEnvironmentProcessor implements EnvironmentPostProcessor
             PropertiesPropertySource propertySource = new PropertiesPropertySource("nacosProperties", props);
             environment.getPropertySources().addLast(propertySource);
         }
-//        NacosHelper helper = new NacosHelper(nacosConfig);
-//        String[] dataIds = new String[]{
-//                String.format("%s_%s", appName, mode),
-//                String.format("%s_%s", NacosConstants.APPLICATION, mode),
-//                appName,
-//                NacosConstants.APPLICATION
-//        };
-//        for (String dataId : dataIds) {
-//            loadConfig(environment, helper, dataId);
-//        }
     }
 
     @Override

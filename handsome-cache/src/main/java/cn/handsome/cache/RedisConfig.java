@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -36,6 +37,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @author shay
  * @date 2021/2/25
  */
+@Slf4j
 @EnableCaching
 @Configuration
 @ConditionalOnClass(RedisOperations.class)
@@ -111,14 +113,22 @@ public class RedisConfig {
     @Bean
     @ConditionalOnMissingBean
     public RedissonClient redissonClient(RedisProperties redisConfig) {
-        String address = String.format("redis://%s:%d", redisConfig.getHost(), redisConfig.getPort());
-        Config config = new Config();
-        SingleServerConfig serversConfig = config.useSingleServer().setAddress(address);
-        if (StrUtil.isNotBlank(redisConfig.getPassword())) {
-            serversConfig.setPassword(redisConfig.getPassword());
-            serversConfig.setDatabase(redisConfig.getDatabase());
+        if (null == redisConfig || StrUtil.isBlank(redisConfig.getHost())) {
+            return null;
         }
-        return Redisson.create(config);
+        try {
+            String address = String.format("redis://%s:%d", redisConfig.getHost(), redisConfig.getPort());
+            Config config = new Config();
+            SingleServerConfig serversConfig = config.useSingleServer().setAddress(address);
+            if (StrUtil.isNotBlank(redisConfig.getPassword())) {
+                serversConfig.setPassword(redisConfig.getPassword());
+                serversConfig.setDatabase(redisConfig.getDatabase());
+            }
+            return Redisson.create(config);
+        } catch (Exception ex) {
+            log.error("create redisson client error:{}", ex.getMessage());
+            return null;
+        }
     }
 
     @Bean

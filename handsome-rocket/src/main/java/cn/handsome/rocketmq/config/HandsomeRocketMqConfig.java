@@ -23,10 +23,9 @@ import java.util.Properties;
  * @date 2021/6/9
  */
 @Slf4j
-@Configuration
 @RequiredArgsConstructor
-public class RocketMqConfig {
-    private final RocketMqProperties config;
+public class HandsomeRocketMqConfig {
+    private final HandsomeRocketMqProperties config;
     private final Environment environment;
     private final static String TOPIC_TEMPLATE = "${handsome.rocket.topics.%s.topic:%s}";
     private final static String TAG_TEMPLATE = "${handsome.rocket.topics.%s.tag:%s}";
