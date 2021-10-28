@@ -1,0 +1,37 @@
+package cn.handsome.web.annotation;
+
+import cn.handsome.core.Constants;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * @author shay
+ * @date 2020/9/1
+ */
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface EnableAuth {
+    /**
+     * 允许匿名
+     *
+     * @return boolean
+     */
+    boolean anonymous() default false;
+
+    /**
+     * 类型
+     *
+     * @return string
+     */
+    String group() default Constants.EMPTY_STR;
+
+    /**
+     * 权限列表(任一)
+     *
+     * @return roles
+     */
+    String[] roles() default {};
+}

@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.2.211:3306/db_demo?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    host: 192.168.2.211
+    port: 6379
+    password: 123456
+    database: 0
+  cache:
+    type: redis
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          max-attempts: 5
+          max-interval: 50000ms
+        prefetch: 1
+logging.level.com.alibaba.nacos: debug
+handsome:
+  rocket:
+    group-id: GID_demo
+    topics:
+      sysmsg:
+        topic: sysmsg
+        tag: "*"
+  thrift:
+    server:
+      service: 127.0.0.1
+      service-port: 9002
+  rabbit:
+    routes:
+      - route-key: test_key
+        queue: test_queue
+        enable-dlx: true
+        enable-delay: true
+server:
+  port: 9001

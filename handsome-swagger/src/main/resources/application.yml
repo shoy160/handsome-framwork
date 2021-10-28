@@ -1,0 +1,16 @@
+handsome:
+  swagger:
+    base-url: "https://api.handsome.cn"
+    resources:
+      - name: 基础服务 - APP
+        version: "2.0"
+        url: "https://api.handsome.cn/api/basic/v2/api-docs?group=app"
+      - name: 社区服务 - APP
+        version: "2.0"
+        url: "https://api.handsome.cn/api/community/v2/api-docs?group=app"
+      - name: 夜店服务 - APP
+        version: "2.0"
+        url: "https://api.handsome.cn/api/nightclub/v2/api-docs?group=app"
+      - name: 音乐节服务 - APP
+        version: "2.0"
+        url: "https://api.handsome.cn/api/festival/v2/api-docs?group=app"
