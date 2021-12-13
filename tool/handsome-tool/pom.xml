@@ -3,23 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>framework</artifactId>
+        <artifactId>tool</artifactId>
         <groupId>cn.handsome.framework</groupId>
         <version>1.1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>handsome-swagger</artifactId>
+    <artifactId>handsome-tool</artifactId>
     <name>${project.artifactId}</name>
     <packaging>jar</packaging>
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>cn.handsome.framework</groupId>
             <artifactId>handsome-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
     <build>
@@ -34,7 +33,7 @@
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>1.4.9</version>
                 <configuration>
-                    <repository>registry.cn-hangzhou.aliyuncs.com/handsome-test/handsome-swagger</repository>
+                    <repository>shoy160/spear-tool</repository>
                     <tag>latest</tag>
                     <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                 </configuration>
