@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>framework</artifactId>
+        <groupId>cn.handsome.framework</groupId>
+        <version>1.1.5</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>handsome-web-jwt</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <version.jwt>3.18.2</version.jwt>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>cn.handsome.framework</groupId>
+            <artifactId>handsome-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${version.jwt}</version>
+        </dependency>
+    </dependencies>
+
+</project>

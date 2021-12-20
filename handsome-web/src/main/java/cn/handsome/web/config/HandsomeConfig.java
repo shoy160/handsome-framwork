@@ -10,7 +10,6 @@ import cn.handsome.core.session.Session;
 import cn.handsome.core.session.TenantSolver;
 import cn.handsome.core.utils.IdWorker;
 import cn.handsome.web.security.AuthContext;
-import cn.handsome.web.security.HandsomeTokenSolver;
 import cn.handsome.web.security.HandsomeTokenVerify;
 import cn.handsome.web.security.ServletSession;
 import cn.hutool.core.lang.Snowflake;
@@ -54,12 +53,6 @@ public class HandsomeConfig {
     @ConditionalOnMissingBean
     public TokenVerify tokenVerify() {
         return new HandsomeTokenVerify(cache);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public TokenSolver tokenSolver(BaseProperties config, TokenVerify tokenVerify) {
-        return new HandsomeTokenSolver(config, tokenVerify);
     }
 
     @Bean

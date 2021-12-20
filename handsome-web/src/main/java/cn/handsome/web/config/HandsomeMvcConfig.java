@@ -5,6 +5,7 @@ import cn.handsome.core.security.TokenVerify;
 import cn.handsome.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
@@ -27,13 +28,17 @@ import java.util.List;
 @AutoConfigureAfter(WebMvcAutoConfiguration.class)
 public class HandsomeMvcConfig implements WebMvcConfigurer {
 
-    private final TokenSolver tokenSolver;
+    private TokenSolver tokenSolver;
     private final TokenVerify tokenVerify;
     private final ObjectMapper objectMapper;
     private final BaseProperties config;
     private final static String STR_ANY = "*";
     private final static String STR_SPLIT = ",";
 
+    @Autowired(required = false)
+    public void setTokenSolver(TokenSolver tokenSolver) {
+        this.tokenSolver = tokenSolver;
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

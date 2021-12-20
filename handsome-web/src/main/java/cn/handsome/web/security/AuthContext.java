@@ -95,39 +95,6 @@ public class AuthContext {
         }
     }
 
-    public static Token getToken(BaseProperties config, String group) {
-        HttpServletRequest request = getRequest();
-        if (request == null) {
-            return null;
-        }
-        Token token;
-        String headerToken = request.getHeader(config.getTokenKey());
-        if (StrUtil.isEmpty(headerToken)) {
-            log.debug("get token from jwt");
-            BaseProperties.TokenConfig tokenConfig = config.groupConfig(group);
-            String jwt = request.getHeader(tokenConfig.getKey());
-            if (CommonUtils.isJwt(jwt)) {
-                if (StrUtil.isNotEmpty(tokenConfig.getPublicKey())) {
-                    token = JwtTokenBuilder.verifyRsa(jwt, tokenConfig.getPublicKey());
-                } else {
-                    String secret = tokenConfig.getSecret();
-                    token = JwtTokenBuilder.verify(jwt, secret);
-                }
-                return token;
-            }
-            return null;
-        }
-        try {
-            log.debug("get token from base64");
-            String jsonToken = Base64.decodeStr(headerToken);
-            token = JsonUtils.json(jsonToken, Token.class);
-            return token;
-        } catch (Exception ex) {
-            log.warn("token解析异常:{}", ex.getLocalizedMessage());
-            return null;
-        }
-    }
-
     private static final String UNKNOWN = "unknown";
     private static final String IP_UTILS_FLAG = ",";
     private static final String LOCALHOST_IP = "0:0:0:0:0:0:0:1";

@@ -58,6 +58,9 @@ public class AuthInterceptor implements HandlerInterceptor {
      * @return token
      */
     private Token verifyToken(EnableAuth auth) {
+        if (null == tokenSolver) {
+            return null;
+        }
         String group = auth == null ? Constants.EMPTY_STR : auth.group();
         Token token = tokenSolver.getToken(group);
         if (token == null) {

@@ -1,4 +1,4 @@
-package cn.handsome.web.security;
+package cn.handsome.web.jwt;
 
 import cn.handsome.core.enums.ResultCode;
 import cn.handsome.core.exception.BusinessException;

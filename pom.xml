@@ -38,6 +38,7 @@
         <module>handsome-sdk-payment</module>
         <module>sample</module>
         <module>tool</module>
+        <module>handsome-web-jwt</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -99,6 +100,11 @@
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-web</artifactId>
+                <version>${version.framework}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.handsome.framework</groupId>
+                <artifactId>handsome-web-jwt</artifactId>
                 <version>${version.framework}</version>
             </dependency>
         </dependencies>

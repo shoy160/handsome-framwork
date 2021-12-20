@@ -1,4 +1,4 @@
-package cn.handsome.web.security;
+package cn.handsome.web.jwt;
 
 import cn.handsome.core.security.Token;
 import cn.handsome.core.security.TokenSolver;
@@ -15,13 +15,13 @@ import java.util.Date;
  * @date 2021/9/27
  */
 @RequiredArgsConstructor
-public class HandsomeTokenSolver implements TokenSolver {
+public class JwtTokenSolver implements TokenSolver {
     private final BaseProperties config;
     private final TokenVerify tokenVerify;
 
     @Override
     public Token getToken(String group) {
-        return AuthContext.getToken(config, group);
+        return JwtContext.getToken(config, group);
     }
 
     @Override

@@ -13,8 +13,6 @@
     <packaging>jar</packaging>
     <properties>
         <version.knife4j>3.0.3</version.knife4j>
-        <version.jwt>3.18.2</version.jwt>
-        <version.nacos>0.2.7</version.nacos>
     </properties>
     <dependencies>
         <dependency>
@@ -45,11 +43,6 @@
                     <artifactId>guava</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>${version.jwt}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
