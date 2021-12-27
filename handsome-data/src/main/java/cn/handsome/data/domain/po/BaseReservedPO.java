@@ -20,12 +20,12 @@ public abstract class BaseReservedPO extends BaseAuditPO implements HaveReserved
     /**
      * 保留字段1
      */
-    @TableField("fd_reserved1")
+    @TableField("reserved1")
     private String reserved1;
 
     /**
      * 保留字段2
      */
-    @TableField("fd_reserved2")
+    @TableField("reserved2")
     private String reserved2;
 }
