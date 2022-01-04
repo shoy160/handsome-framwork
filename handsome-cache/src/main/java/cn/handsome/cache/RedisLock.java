@@ -2,11 +2,18 @@ package cn.handsome.cache;
 
 import cn.handsome.core.lang.ActionVoid;
 import cn.handsome.core.lang.FuncVoid;
+import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 
+import java.io.IOException;
+import java.rmi.ConnectIOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,10 +23,18 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequiredArgsConstructor
 public class RedisLock {
-    private final RedissonClient redissonClient;
+    private final RedisProperties redisConfig;
+    private RedissonClient redissonClient;
+
+    public RedissonClient getRedissonClient() {
+        if (null == redissonClient) {
+            redissonClient = client(this.redisConfig);
+        }
+        return this.redissonClient;
+    }
 
     public RLock getLock(String key) {
-        return redissonClient.getLock(key);
+        return getRedissonClient().getLock(key);
     }
 
     public void tryLock(String key, ActionVoid action) {
@@ -27,10 +42,10 @@ public class RedisLock {
     }
 
     public void tryLock(String key, long timeout, ActionVoid action) {
-        if (null == action || null == redissonClient) {
+        if (null == action || null == getRedissonClient()) {
             return;
         }
-        RLock lock = redissonClient.getLock(key);
+        RLock lock = getRedissonClient().getLock(key);
         try {
             boolean result;
             if (timeout > 0) {
@@ -56,7 +71,7 @@ public class RedisLock {
         if (null == func) {
             return null;
         }
-        RLock lock = redissonClient.getLock(key);
+        RLock lock = getRedissonClient().getLock(key);
         try {
             boolean result;
             if (timeout > 0) {
@@ -73,5 +88,24 @@ public class RedisLock {
             lock.unlock();
         }
         return null;
+    }
+
+    public static RedissonClient client(RedisProperties redisConfig) {
+        if (null == redisConfig || StrUtil.isBlank(redisConfig.getHost())) {
+            return null;
+        }
+        try {
+            String address = String.format("redis://%s:%d", redisConfig.getHost(), redisConfig.getPort());
+            Config config = new Config();
+            SingleServerConfig serversConfig = config.useSingleServer().setAddress(address);
+            if (StrUtil.isNotBlank(redisConfig.getPassword())) {
+                serversConfig.setPassword(redisConfig.getPassword());
+                serversConfig.setDatabase(redisConfig.getDatabase());
+            }
+            return Redisson.create(config);
+        } catch (Exception ex) {
+            log.error("create redisson client error:{}", ex.getMessage());
+            return null;
+        }
     }
 }

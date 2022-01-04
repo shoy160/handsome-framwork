@@ -44,45 +44,24 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @EnableConfigurationProperties(RedisProperties.class)
 public class RedisConfig {
 
-    private static RedisSerializer<Object> objectRedisSerializer() {
-        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        ObjectMapper om = new ObjectMapper();
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        serializer.setObjectMapper(om);
-        return serializer;
+    @Bean
+    public RedisTemplateFactory redisTemplateFactory(RedisConnectionFactory connectionFactory) {
+        return new RedisTemplateFactory(connectionFactory);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @SuppressWarnings("all")
-    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory factory) {
-        StringRedisTemplate template = new StringRedisTemplate();
-        template.setConnectionFactory(factory);
-        return template;
+    public StringRedisTemplate stringRedisTemplate(RedisTemplateFactory factory) {
+        return factory.stringRedisTemplate();
     }
 
     @Bean
     @Primary
     @SuppressWarnings("all")
-    public <T> RedisTemplate<String, T> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, T> template = new RedisTemplate<String, T>();
-        template.setConnectionFactory(factory);
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        // key采用String的序列化方式
-        template.setKeySerializer(stringRedisSerializer);
-        // hash的key也采用String的序列化方式
-        template.setHashKeySerializer(stringRedisSerializer);
-        RedisSerializer<Object> valueSerializer = objectRedisSerializer();
-        // value序列化方式采用jackson
-        template.setValueSerializer(valueSerializer);
-        // hash的value序列化方式采用jackson
-        template.setHashValueSerializer(valueSerializer);
-        template.afterPropertiesSet();
-        return template;
+    public <T> RedisTemplate<String, T> redisTemplate(RedisTemplateFactory factory) {
+        return factory.redisTemplate();
     }
-
 
     @Bean
     public Cache<String, String> stringCacheBean(StringRedisTemplate template) {
@@ -106,35 +85,18 @@ public class RedisConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public RedisRouter routerFinder(StringRedisTemplate redisTemplate) {
+    public RedisRouter redisRouter(StringRedisTemplate redisTemplate) {
         return new RedisRouter(redisTemplate);
     }
 
     @Bean
-    @ConditionalOnMissingBean
     public RedissonClient redissonClient(RedisProperties redisConfig) {
-        if (null == redisConfig || StrUtil.isBlank(redisConfig.getHost())) {
-            return null;
-        }
-        try {
-            String address = String.format("redis://%s:%d", redisConfig.getHost(), redisConfig.getPort());
-            Config config = new Config();
-            SingleServerConfig serversConfig = config.useSingleServer().setAddress(address);
-            if (StrUtil.isNotBlank(redisConfig.getPassword())) {
-                serversConfig.setPassword(redisConfig.getPassword());
-                serversConfig.setDatabase(redisConfig.getDatabase());
-            }
-            return Redisson.create(config);
-        } catch (Exception ex) {
-            log.error("create redisson client error:{}", ex.getMessage());
-            return null;
-        }
+        return RedisLock.client(redisConfig);
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public RedisLock redisLock(RedissonClient redissonClient) {
-        return new RedisLock(redissonClient);
+    public RedisLock redisLock(RedisProperties redisConfig) {
+        return new RedisLock(redisConfig);
     }
 
     @Bean
