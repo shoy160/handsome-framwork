@@ -1,7 +1,10 @@
 package cn.handsome.web.config;
 
+import cn.handsome.core.Constants;
 import cn.handsome.core.enums.BaseEnum;
+import cn.handsome.core.enums.EnumSerializerType;
 import cn.handsome.core.enums.TimestampType;
+import cn.handsome.core.utils.ReflectUtils;
 import cn.handsome.web.serializer.converter.DateLongConverter;
 import cn.handsome.web.serializer.converter.DateStringConverter;
 import cn.handsome.web.serializer.converter.EnumConverter;
@@ -20,6 +23,7 @@ import org.springframework.core.convert.converter.Converter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 时间戳 配置
@@ -60,9 +64,12 @@ public class HandsomeSerializerConfig {
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
         SimpleModule module = new SimpleModule();
-        if (config.isEnumValue()) {
+        if (config.getEnumSerializer() != EnumSerializerType.String) {
             module.addSerializer(BaseEnum.class, new EnumSerializer(config));
-            module.addDeserializer(BaseEnum.class, new EnumDeserializer(config));
+            Set<Class<?>> enums = ReflectUtils.findClasses(Constants.BASE_PACKAGES, t -> BaseEnum.class.isAssignableFrom(t) && t.isEnum());
+            for (Class<?> clazz : enums) {
+                module.addDeserializer(clazz, new EnumDeserializer(config, clazz));
+            }
         }
 
         //长整型处理

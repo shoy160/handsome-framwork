@@ -3,6 +3,9 @@ package cn.handsome.core.http;
 import cn.handsome.core.Singleton;
 import cn.handsome.core.http.handler.ClientProxyHandler;
 import cn.handsome.core.proxy.ProxyFactory;
+import net.sf.cglib.proxy.MethodInterceptor;
+
+import java.lang.reflect.InvocationHandler;
 
 /**
  * @author shay
@@ -86,6 +89,16 @@ public interface HttpClientFactory extends ProxyFactory {
      * @return instance
      */
     static HttpClientFactory instance() {
-        return Singleton.instance((clazz, handler) -> ProxyFactory.instance().create(clazz, handler));
+        return Singleton.instance(new HttpClientFactory() {
+            @Override
+            public Object create(Class<?> clazz, InvocationHandler handler) {
+                return ProxyFactory.instance().create(clazz, handler);
+            }
+
+            @Override
+            public Object create(Class<?> clazz, MethodInterceptor interceptor) {
+                return ProxyFactory.instance().create(clazz, interceptor);
+            }
+        });
     }
 }

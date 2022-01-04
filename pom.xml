@@ -27,7 +27,6 @@
     <modules>
         <module>handsome-core</module>
         <module>handsome-data</module>
-        <module>handsome-web</module>
         <module>handsome-logger-remote</module>
         <module>handsome-cache</module>
         <module>handsome-thrift</module>
@@ -36,9 +35,11 @@
         <module>handsome-nacos</module>
         <module>handsome-sdk-im</module>
         <module>handsome-sdk-payment</module>
+        <module>handsome-web</module>
+        <module>handsome-web-jwt</module>
         <module>sample</module>
         <module>tool</module>
-        <module>handsome-web-jwt</module>
+
     </modules>
     <dependencyManagement>
         <dependencies>

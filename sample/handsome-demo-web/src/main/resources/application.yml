@@ -39,5 +39,6 @@ handsome:
         queue: test_queue
         enable-dlx: true
         enable-delay: true
+  enum-serializer: string
 server:
   port: 9001

@@ -1,8 +1,11 @@
 package cn.handsome.core.proxy.impl;
 
+import cn.handsome.core.lang.FuncVoid;
 import cn.handsome.core.proxy.ProxyFactory;
 import cn.handsome.core.utils.IdentityUtils;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -18,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 @Slf4j
 public class ProxyFactoryImpl implements ProxyFactory {
-    private final ConcurrentMap<Class<?>, Map<InvocationHandler, Object>> proxyCache;
+    private final ConcurrentMap<Class<?>, Map<Object, Object>> proxyCache;
 
     public ProxyFactoryImpl() {
         this.proxyCache = new ConcurrentHashMap<>();
@@ -27,26 +30,41 @@ public class ProxyFactoryImpl implements ProxyFactory {
 
     @Override
     public Object create(Class<?> clazz, InvocationHandler handler) {
-        Map<InvocationHandler, Object> instanceMap = proxyCache.getOrDefault(clazz, null);
+        return createFromCache(clazz, handler, () -> {
+            ClassLoader loader = clazz.getClassLoader();
+            List<Class<?>> interfaces = new ArrayList<>();
+            if (clazz.isInterface()) {
+                interfaces.add(clazz);
+            }
+            interfaces.addAll(Arrays.asList(clazz.getInterfaces()));
+            return Proxy.newProxyInstance(loader, interfaces.toArray(new Class[0]), handler);
+        });
+    }
+
+    @Override
+    public Object create(Class<?> clazz, MethodInterceptor interceptor) {
+        return createFromCache(clazz, interceptor, () -> Enhancer.create(clazz, interceptor));
+    }
+
+    private Object createFromCache(Class<?> clazz, Object handler, FuncVoid<Object> func) {
+        Map<Object, Object> instanceMap = proxyCache.getOrDefault(clazz, null);
         if (null == instanceMap) {
             instanceMap = new HashMap<>();
         }
-        if (instanceMap.containsKey(handler)) {
-            return instanceMap.get(handler);
+        Object instance = instanceMap.get(handler);
+        if (null != instance) {
+            return instance;
         }
-        ClassLoader loader = clazz.getClassLoader();
-        List<Class<?>> interfaces = new ArrayList<>();
-        if (clazz.isInterface()) {
-            interfaces.add(clazz);
+        if (null != func) {
+            instance = func.invoke();
+            instanceMap.put(handler, instance);
+            if (proxyCache.containsKey(clazz)) {
+                proxyCache.replace(clazz, instanceMap);
+            } else {
+                proxyCache.put(clazz, instanceMap);
+            }
+            return instance;
         }
-        interfaces.addAll(Arrays.asList(clazz.getInterfaces()));
-        Object instance = Proxy.newProxyInstance(loader, interfaces.toArray(new Class[0]), handler);
-        instanceMap.put(handler, instance);
-        if (proxyCache.containsKey(clazz)) {
-            proxyCache.replace(clazz, instanceMap);
-        } else {
-            proxyCache.put(clazz, instanceMap);
-        }
-        return instance;
+        return null;
     }
 }

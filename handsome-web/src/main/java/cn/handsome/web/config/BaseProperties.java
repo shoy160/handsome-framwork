@@ -1,6 +1,7 @@
 package cn.handsome.web.config;
 
 import cn.handsome.core.Constants;
+import cn.handsome.core.enums.EnumSerializerType;
 import cn.handsome.core.enums.TimestampType;
 import cn.handsome.core.utils.CommonUtils;
 import cn.hutool.core.util.StrUtil;
@@ -9,7 +10,6 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -39,7 +39,7 @@ public class BaseProperties {
     /**
      * 枚举值序列化
      */
-    private boolean enumValue = true;
+    private EnumSerializerType enumSerializer = EnumSerializerType.Code;
 
     /**
      * 长整型序列化时转为字符类型
