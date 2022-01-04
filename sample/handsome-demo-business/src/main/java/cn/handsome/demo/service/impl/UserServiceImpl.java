@@ -1,5 +1,6 @@
 package cn.handsome.demo.service.impl;
 
+import cn.handsome.data.wrapper.JoinLambdaQueryChainWrapper;
 import cn.handsome.demo.dao.UserMapper;
 import cn.handsome.demo.domain.po.UserPO;
 import cn.handsome.demo.service.UserService;
@@ -18,6 +19,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
     @Override
     public String get(long userId) {
         log.info("random");
+        JoinLambdaQueryChainWrapper<UserPO> wrapper = new JoinLambdaQueryChainWrapper<>(baseMapper);
         return RandomUtil.randomString(12);
 //        UserPO entity = lambdaQuery()
 //                .eq(UserPO::getId, userId)

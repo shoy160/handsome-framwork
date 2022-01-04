@@ -55,7 +55,7 @@
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
-                <artifactId>handsome-log</artifactId>
+                <artifactId>handsome-logger-remote</artifactId>
                 <version>${version.framework}</version>
             </dependency>
             <dependency>
