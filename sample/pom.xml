@@ -16,5 +16,6 @@
         <module>handsome-demo-client</module>
         <module>handsome-demo-business</module>
         <module>handsome-demo-web</module>
+        <module>handsome-graphql-web</module>
     </modules>
 </project>
