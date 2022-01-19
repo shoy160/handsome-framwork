@@ -72,7 +72,7 @@ public class BaseProperties {
     private String corsPath = "/**";
     private String corsMethods = "GET,POST,PUT,PATCH,DELETE,OPTIONS";
     private String corsOrigin = "*";
-    private String corsHeaders = "Token,Jwt-Token,language,content-type,access-token,accesstoken";
+    private String corsHeaders = "Token,Jwt-Token,Language,Content-Type,Authorization,Referer";
     private Date epochDate;
     private int datacenterId = 1;
     /**
