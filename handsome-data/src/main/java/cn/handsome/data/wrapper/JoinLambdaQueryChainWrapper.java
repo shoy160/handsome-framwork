@@ -1,7 +1,6 @@
 package cn.handsome.data.wrapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 
@@ -25,12 +24,8 @@ public class JoinLambdaQueryChainWrapper<T> extends LambdaQueryChainWrapper<T> {
         return this;
     }
 
-    public <R> JoinLambdaQueryChainWrapper<T> join(String keyWord, boolean condition, Class<R> clazz, OnFunction function) {
+    public <R> JoinLambdaQueryChainWrapper<T> join(String keyWord, boolean condition, Class<R> clazz) {
         if (condition) {
-//            MPJLambdaWrapper<?> apply = function.apply(instance(keyWord, clazz));
-//            onWrappers.add(apply);
-//            subTable.put(clazz, tableIndex);
-//            tableIndex++;
         }
         return this;
     }
