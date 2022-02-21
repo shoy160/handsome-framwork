@@ -11,13 +11,13 @@
     <groupId>cn.handsome.framework</groupId>
     <artifactId>framework</artifactId>
     <name>${project.artifactId}</name>
-    <version>1.1.5</version>
+    <version>1.1.7</version>
     <packaging>pom</packaging>
     <description>
         handsome cloud framework
     </description>
     <properties>
-        <version.framework>1.1.5</version.framework>
+        <version.framework>1.1.7</version.framework>
         <version.java>1.8</version.java>
         <version.springboot>2.5.6</version.springboot>
         <version.hutool>5.7.15</version.hutool>
@@ -37,8 +37,8 @@
         <module>handsome-sdk-payment</module>
         <module>handsome-web</module>
         <module>handsome-web-jwt</module>
-        <module>sample</module>
-        <module>tool</module>
+<!--        <module>sample</module>-->
+<!--        <module>tool</module>-->
 
     </modules>
     <dependencyManagement>

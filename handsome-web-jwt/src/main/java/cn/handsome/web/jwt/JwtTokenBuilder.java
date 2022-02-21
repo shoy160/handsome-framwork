@@ -4,7 +4,10 @@ import cn.handsome.core.enums.ResultCode;
 import cn.handsome.core.exception.BusinessException;
 import cn.handsome.core.security.Token;
 import cn.handsome.core.security.TokenClaims;
+import cn.handsome.core.utils.JsonUtils;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
@@ -50,7 +53,9 @@ public class JwtTokenBuilder {
         builder.withClaim(TokenClaims.NAME, this.token.getName());
         builder.withClaim(TokenClaims.ROLE, this.token.getRole());
         builder.withClaim(TokenClaims.MARKING, this.token.getMarking());
-        builder.withClaim(TokenClaims.CLAIMS, this.token.getClaims());
+        if (MapUtil.isNotEmpty(this.token.getClaims())) {
+            builder.withClaim(TokenClaims.CLAIMS, JsonUtils.toJson(this.token.getClaims()));
+        }
         return builder;
     }
 
@@ -70,8 +75,12 @@ public class JwtTokenBuilder {
             token.setMarking(map.get(TokenClaims.MARKING).asString());
         }
         if (map.get(TokenClaims.CLAIMS) != null) {
-            Map<String, Object> claims = map.get(TokenClaims.CLAIMS).asMap();
-            token.setClaims(claims);
+            String value = map.get(TokenClaims.CLAIMS).asString();
+            if (StrUtil.isNotBlank(value)) {
+                Map<String, Object> claims =
+                        JsonUtils.json(value, f -> f.constructMapType(Map.class, String.class, Object.class));
+                token.setClaims(claims);
+            }
         }
         if (map.get(TokenClaims.EXP) != null) {
             Long expire = map.get(TokenClaims.EXP).asLong();
