@@ -14,6 +14,7 @@ import java.util.List;
 public interface Constants {
     String APP_NAME = "";
     String EMPTY_STR = "";
+    String REGION_SPLIT = ":";
     String APPLICATION_VERSION = "1.1.0";
     /**
      * 基础包
@@ -63,4 +64,6 @@ public interface Constants {
     String GROUP_APP = "app";
     String GROUP_MANAGE = "manage";
     String GROUP_MERCHANT = "merchant";
+
+    String CACHE_SYNC_CHANNEL = "cache_sync";
 }

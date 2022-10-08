@@ -3,7 +3,12 @@ package cn.handsome.core.cache;
 import cn.handsome.core.Constants;
 import cn.handsome.core.AppContext;
 import cn.handsome.core.lang.Action;
+import cn.handsome.core.utils.CommonUtils;
+import cn.handsome.core.utils.EncryptionUtil;
+import cn.handsome.core.utils.JsonUtils;
+import cn.handsome.core.utils.TypeUtils;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.SerializeUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -50,5 +55,27 @@ public abstract class BaseCache<K, V> implements Cache<K, V> {
 
     @Override
     public void keyExpired(Action<K> expiredAction, Class<K> clazz) {
+    }
+
+    protected String stringKey(K key) {
+        return stringKey(key, true);
+    }
+
+    protected String stringKey(K key, boolean includeRegion) {
+        if (null == key) {
+            return Constants.EMPTY_STR;
+        }
+        String stringKey;
+        if (TypeUtils.isSimple(key)) {
+            stringKey = key.toString();
+        } else {
+            stringKey = JsonUtils.toJson(key);
+        }
+        if (includeRegion && StrUtil.isNotBlank(this.getRegion())) {
+            return this.getRegion()
+                    .concat(Constants.REGION_SPLIT)
+                    .concat(stringKey);
+        }
+        return stringKey;
     }
 }

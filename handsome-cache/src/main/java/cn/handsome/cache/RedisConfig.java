@@ -28,6 +28,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -77,9 +78,11 @@ public class RedisConfig {
     @Bean
     @ConditionalOnMissingBean
     @SuppressWarnings("all")
-    public RedisMessageListenerContainer container(RedisConnectionFactory factory) {
+    public RedisMessageListenerContainer container(RedisConnectionFactory factory, CacheSyncListener cacheSyncListener) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(factory);
+        ChannelTopic topic = new ChannelTopic(Constants.CACHE_SYNC_CHANNEL);
+        container.addMessageListener(cacheSyncListener, topic);
         return container;
     }
 

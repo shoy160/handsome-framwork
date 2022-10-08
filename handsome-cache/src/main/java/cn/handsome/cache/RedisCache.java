@@ -1,5 +1,6 @@
 package cn.handsome.cache;
 
+import cn.handsome.core.cache.SyncCacheKey;
 import cn.hutool.core.convert.Convert;
 import cn.handsome.core.Constants;
 import cn.handsome.core.cache.BaseCache;
@@ -143,5 +144,9 @@ public class RedisCache<K, V> extends BaseCache<K, V> {
                 expiredAction.invoke(convertKey(key, clazz));
             }
         });
+    }
+
+    public void sendSync(SyncCacheKey cacheKey) {
+        this.template.convertAndSend(Constants.CACHE_SYNC_CHANNEL, cacheKey);
     }
 }

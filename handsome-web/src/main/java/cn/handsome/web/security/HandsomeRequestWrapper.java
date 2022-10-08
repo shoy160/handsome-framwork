@@ -23,13 +23,14 @@ public class HandsomeRequestWrapper extends HttpServletRequestWrapper {
 
     public byte[] getBody() {
         if (null == this.body) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            try {
+
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 IoUtil.copy(getRequest().getInputStream(), outputStream);
+                this.body = outputStream.toByteArray();
             } catch (IOException e) {
                 this.body = new byte[0];
             }
-            this.body = outputStream.toByteArray();
+
         }
         return this.body;
     }
