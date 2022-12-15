@@ -109,4 +109,17 @@ public final class BytesUtils {
         }
         return result;
     }
+
+    public static byte[] read(byte[] buffer, int start, int length) {
+        byte[] bytes = new byte[length];
+        int len = buffer.length;
+        for (int i = 0; i < length; i++) {
+            int index = start + i;
+            if (index >= len) {
+                break;
+            }
+            bytes[i] = buffer[index];
+        }
+        return bytes;
+    }
 }

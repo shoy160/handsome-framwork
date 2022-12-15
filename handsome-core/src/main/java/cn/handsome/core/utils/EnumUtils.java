@@ -1,13 +1,13 @@
 package cn.handsome.core.utils;
 
-import cn.handsome.core.enums.ValueEnum;
-import cn.handsome.core.enums.ValueNameEnum;
+import cn.handsome.core.Constants;
+import cn.handsome.core.enums.*;
+import cn.handsome.core.lang.Func;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 枚举辅助类
@@ -278,5 +278,56 @@ public final class EnumUtils {
             flag = (flag | flagValue) ^ flagValue;
         }
         return Convert.convert(value.getClass(), flag, value);
+    }
+
+    public static Map<String, Map<Object, String>> findEnums(String packageName, EnumSerializerType serializerType) {
+        return findEnums(packageName, serializerType, null);
+    }
+
+    public static Map<String, Map<Object, String>> findEnums(
+            String packageName, EnumSerializerType serializerType, Func<Boolean, String> filter
+    ) {
+        Set<Class<?>> enumClasses = ReflectUtils.findClasses(packageName, Class::isEnum);
+        if (enumClasses.isEmpty()) {
+            return new HashMap<>(0);
+        }
+        Iterator<Class<?>> iterator = enumClasses.iterator();
+        Map<String, Map<Object, String>> enumMap = new HashMap<>();
+        while (iterator.hasNext()) {
+            Class<?> clazz = iterator.next();
+            String name = CommonUtils.getName(clazz);
+            if (Objects.nonNull(filter) && !filter.invoke(name)) {
+                continue;
+            }
+            Object[] enumConstants = clazz.getEnumConstants();
+            boolean isString = EnumSerializerType.String.equals(serializerType);
+            Map<Object, String> enumValues = new LinkedHashMap<>();
+            Arrays.sort(enumConstants, (a, b) -> {
+                if (isString) {
+                    return ((Enum<?>) a).name().compareTo(((Enum<?>) b).name());
+                }
+                return BaseEnum.class.isAssignableFrom(clazz)
+                        ? Integer.compare(((BaseEnum) a).getValue(), ((BaseEnum) b).getValue())
+                        : Integer.compare(((Enum<?>) a).ordinal(), ((Enum<?>) b).ordinal());
+            });
+            for (Object item : enumConstants) {
+                Object key = item.toString();
+                String value = item.toString();
+                if (isString) {
+                    if (item instanceof BaseNamedEnum) {
+                        value = ((BaseNamedEnum) item).getName();
+                    }
+                } else {
+                    if (item instanceof BaseEnum) {
+                        key = ((BaseEnum) item).getValue();
+                    } else {
+                        key = ((Enum<?>) item).ordinal();
+                    }
+                }
+                enumValues.put(key, value);
+            }
+            enumMap.put(name, enumValues);
+        }
+        return enumMap;
     }
 }

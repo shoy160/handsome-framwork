@@ -1,11 +1,6 @@
 package cn.handsome.web.security;
 
-import cn.handsome.core.security.Token;
-import cn.handsome.core.utils.CommonUtils;
-import cn.handsome.core.utils.JsonUtils;
-import cn.handsome.web.config.BaseProperties;
 import cn.handsome.web.utils.UriUtil;
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
