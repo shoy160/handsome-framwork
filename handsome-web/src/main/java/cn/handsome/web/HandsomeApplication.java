@@ -139,17 +139,7 @@ public class HandsomeApplication extends SpringApplication {
             props.setProperty("spring.lifecycle.timeout-per-shutdown-phase", "20s");
             //开启健康检测
             props.setProperty("management.endpoint.health.probes.enabled", "true");
-            //Nacos配置中心
-            props.setProperty("nacos.config.auto-refresh", "true");
-            props.setProperty("nacos.config.group", "DEFAULT_GROUP");
-            final String applicationConfig = "application";
-            List<String> dataIds = new ArrayList<>();
-            dataIds.add(this.appName.concat("_").concat(this.profile));
-            dataIds.add(applicationConfig.concat("_").concat(this.profile));
-            dataIds.add(this.appName);
-            dataIds.add(applicationConfig);
-            props.setProperty("nacos.config.data-ids", String.join(",", dataIds));
-            props.setProperty("nacos.config.type", "yaml");
+            LauncherManager.getInstance().config(environment, props);
             basic = new PropertiesPropertySource(basicName, props);
         } else {
             propertySources.remove(basicName);

@@ -37,8 +37,8 @@
         <module>handsome-sdk-payment</module>
         <module>handsome-web</module>
         <module>handsome-web-jwt</module>
-<!--        <module>sample</module>-->
-<!--        <module>tool</module>-->
+        <module>sample</module>
+        <!--        <module>tool</module>-->
 
     </modules>
     <dependencyManagement>

@@ -2,8 +2,10 @@ package cn.handsome.core.launcher;
 
 import cn.handsome.core.Constants;
 import cn.handsome.core.utils.ReflectUtils;
+import org.springframework.core.env.ConfigurableEnvironment;
 
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -41,6 +43,12 @@ public class LauncherManager {
     public void preLoad() {
         for (Launcher launcher : this.launcherList) {
             launcher.preLoad();
+        }
+    }
+
+    public void config(ConfigurableEnvironment environment, Properties properties) {
+        for (Launcher launcher : this.launcherList) {
+            launcher.config(environment, properties);
         }
     }
 

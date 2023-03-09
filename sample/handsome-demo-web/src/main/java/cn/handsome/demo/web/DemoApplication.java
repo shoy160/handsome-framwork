@@ -6,14 +6,15 @@ import cn.handsome.thrift.annotation.EnableThriftServer;
 import cn.handsome.web.HandsomeApplication;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
  * @author shoy
  * @date 2021/05/28
  */
-@EnableThriftServer
-@SpringBootApplication
+//@EnableThriftServer
+@SpringBootApplication(exclude = {RabbitAutoConfiguration.class})
 @ComponentScan(Constants.BASE_PACKAGES)
 @MapperScan(value = DemoConstants.MAPPER_PACKAGE)
 public class DemoApplication {

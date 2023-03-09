@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import cn.handsome.data.domain.po.BaseAuditPO;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,7 +32,7 @@ public class UserPO extends BaseAuditPO {
     @TableField(value = "gender", typeHandler = EnumTypeHandler.class)
     private GenderEnum gender;
 
-    @TableField(value = "tags", typeHandler = JsonTypeHandler.class)
+    @TableField(value = "tags", typeHandler = JacksonTypeHandler.class)
     private List<TagDTO> tags;
 
     @Getter
