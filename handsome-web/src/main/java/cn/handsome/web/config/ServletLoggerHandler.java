@@ -1,5 +1,6 @@
 package cn.handsome.web.config;
 
+import cn.handsome.core.AppContext;
 import cn.handsome.core.logger.LoggerHandler;
 import cn.handsome.core.utils.CommonUtils;
 import cn.handsome.web.HandsomeApplication;
@@ -23,11 +24,8 @@ public class ServletLoggerHandler implements LoggerHandler {
         if (null == message) {
             return;
         }
-        HandsomeApplication current = HandsomeApplication.getCurrent();
-        if (current != null) {
-            message.putIfAbsent("app", current.getAppName());
-            message.putIfAbsent("mode", HandsomeApplication.getMode());
-        }
+        message.putIfAbsent("app", AppContext.getAppName());
+        message.putIfAbsent("mode", AppContext.getAppMode());
         HttpServletRequest request = AuthContext.getRequest();
         if (request != null) {
             message.putIfAbsent("http-method", request.getMethod());

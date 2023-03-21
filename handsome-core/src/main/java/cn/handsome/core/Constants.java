@@ -23,6 +23,8 @@ public interface Constants {
 
     String MODE_DEV = "dev";
 
+    String MODE_SECRET = "secret";
+
     String MODE_TEST = "test";
 
     String MODE_READY = "ready";

@@ -50,12 +50,11 @@ public class AppContext {
         }
     }
 
-    public static String getAppMode(String[] activeProfiles) {
+    public static void setAppMode(String[] activeProfiles) {
         String profile = getActiveProfile(activeProfiles);
         if (null != instance) {
             instance.appMode = profile;
         }
-        return profile;
     }
 
     /**
