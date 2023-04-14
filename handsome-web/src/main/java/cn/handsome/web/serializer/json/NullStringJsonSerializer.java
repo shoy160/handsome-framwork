@@ -18,6 +18,6 @@ public class NullStringJsonSerializer extends JsonSerializer<Object> {
 
     @Override
     public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
-        jsonGenerator.writeString(Constants.EMPTY_STR);
+        jsonGenerator.writeString(Constants.STR_EMPTY);
     }
 }

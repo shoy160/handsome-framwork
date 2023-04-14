@@ -83,7 +83,7 @@ public class GlobalExceptionResolver {
      */
     private String processFieldErrors(List<FieldError> fieldErrors) {
         if (ArrayUtil.isEmpty(fieldErrors)) {
-            return Constants.EMPTY_STR;
+            return Constants.STR_EMPTY;
         }
         if (AppContext.isProd()) {
             return resolveLocalizedErrorMessage(fieldErrors.get(0));

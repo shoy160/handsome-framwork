@@ -12,7 +12,6 @@ import cn.handsome.core.http.HttpClientFilter;
 import cn.handsome.core.http.HttpHelper;
 import cn.handsome.core.http.HttpRequest;
 import cn.handsome.core.http.HttpResponse;
-import cn.handsome.core.http.annotation.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -181,7 +180,7 @@ public class ClientProxyHandler implements InvocationHandler {
             setRequestParameter(request, parameter, value, queryMap);
         }
         //替换掉未匹配的参数
-        String url = request.getUrl().replaceAll("\\{[^\\}]+\\}", Constants.EMPTY_STR);
+        String url = request.getUrl().replaceAll("\\{[^\\}]+\\}", Constants.STR_EMPTY);
         request.setUrl(url);
         request.setParams(queryMap);
     }

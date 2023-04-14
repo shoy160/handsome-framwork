@@ -111,7 +111,7 @@ public class BaseProperties {
     }
 
     public TokenConfig groupConfig() {
-        return groupConfig(Constants.EMPTY_STR);
+        return groupConfig(Constants.STR_EMPTY);
     }
 
     @Getter

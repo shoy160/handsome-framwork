@@ -87,8 +87,8 @@ public class HandsomeApplication extends SpringApplication {
         LauncherManager.getInstance().config(environment, props);
         basic = new PropertiesPropertySource(basicName, props);
         propertySources.addLast(basic);
-        AppContext.setAppMode(environment.getActiveProfiles());
-        String startJarPath = Constants.EMPTY_STR;
+        AppContext.initAppMode(environment.getActiveProfiles());
+        String startJarPath = Constants.STR_EMPTY;
         URL resource = HandsomeApplication.class.getResource("/");
         if (Objects.nonNull(resource)) {
             startJarPath = resource.getPath().split("!")[0];

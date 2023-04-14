@@ -3,12 +3,9 @@ package cn.handsome.core.cache;
 import cn.handsome.core.Constants;
 import cn.handsome.core.AppContext;
 import cn.handsome.core.lang.Action;
-import cn.handsome.core.utils.CommonUtils;
-import cn.handsome.core.utils.EncryptionUtil;
 import cn.handsome.core.utils.JsonUtils;
 import cn.handsome.core.utils.TypeUtils;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.SerializeUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -23,7 +20,7 @@ public abstract class BaseCache<K, V> implements Cache<K, V> {
     private final String region;
 
     protected BaseCache() {
-        this(Constants.EMPTY_STR);
+        this(Constants.STR_EMPTY);
     }
 
     protected BaseCache(String region) {
@@ -43,7 +40,7 @@ public abstract class BaseCache<K, V> implements Cache<K, V> {
             //默认区域去 AppName
             String appName = AppContext.getAppName();
             if (StrUtil.isNotBlank(appName)) {
-                return appName.replaceFirst("^handsome-", Constants.EMPTY_STR);
+                return appName.replaceFirst("^handsome-", Constants.STR_EMPTY);
             }
         }
         return this.region;
@@ -63,7 +60,7 @@ public abstract class BaseCache<K, V> implements Cache<K, V> {
 
     protected String stringKey(K key, boolean includeRegion) {
         if (null == key) {
-            return Constants.EMPTY_STR;
+            return Constants.STR_EMPTY;
         }
         String stringKey;
         if (TypeUtils.isSimple(key)) {
@@ -73,7 +70,7 @@ public abstract class BaseCache<K, V> implements Cache<K, V> {
         }
         if (includeRegion && StrUtil.isNotBlank(this.getRegion())) {
             return this.getRegion()
-                    .concat(Constants.REGION_SPLIT)
+                    .concat(Constants.STR_REGION)
                     .concat(stringKey);
         }
         return stringKey;

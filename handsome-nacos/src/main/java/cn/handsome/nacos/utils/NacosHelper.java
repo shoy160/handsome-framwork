@@ -29,7 +29,7 @@ public class NacosHelper {
         query.put("group", group);
         HttpResponse response = HttpHelper.get(url, query);
         if (response.isErrorCode()) {
-            return Constants.EMPTY_STR;
+            return Constants.STR_EMPTY;
         }
         return response.readBody();
     }

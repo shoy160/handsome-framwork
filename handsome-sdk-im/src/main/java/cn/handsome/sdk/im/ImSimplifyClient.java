@@ -346,6 +346,6 @@ public interface ImSimplifyClient {
      * @return ImID
      */
     default String imId(Long id) {
-        return imId(id, Constants.EMPTY_STR);
+        return imId(id, Constants.STR_EMPTY);
     }
 }

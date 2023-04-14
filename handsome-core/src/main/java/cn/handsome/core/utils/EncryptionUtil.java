@@ -36,7 +36,7 @@ public final class EncryptionUtil {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return Constants.EMPTY_STR;
+        return Constants.STR_EMPTY;
     }
 
 
@@ -84,7 +84,7 @@ public final class EncryptionUtil {
     public static String rsaEncrypt(String data, String publicKey) {
         byte[] encryptData = rsaEncryptByte(data.getBytes(StandardCharsets.UTF_8), publicKey);
         if (null == encryptData) {
-            return Constants.EMPTY_STR;
+            return Constants.STR_EMPTY;
         }
         return Base64.getEncoder().encodeToString(encryptData);
     }
@@ -109,7 +109,7 @@ public final class EncryptionUtil {
         byte[] bytes = Base64.getDecoder().decode(data);
         byte[] decryptData = rsaDecryptByte(bytes, privateKey);
         if (null == decryptData) {
-            return Constants.EMPTY_STR;
+            return Constants.STR_EMPTY;
         }
         return new String(decryptData, StandardCharsets.UTF_8);
     }

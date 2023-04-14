@@ -23,7 +23,7 @@ public class MemoryCache<K, V> extends BaseCache<K, V> {
     private Action<K> expiredListener;
 
     public MemoryCache() {
-        this(Constants.EMPTY_STR, 0, 200);
+        this(Constants.STR_EMPTY, 0, 200);
     }
 
     public MemoryCache(String region) {

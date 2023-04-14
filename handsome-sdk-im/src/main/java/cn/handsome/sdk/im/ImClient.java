@@ -2,7 +2,6 @@ package cn.handsome.sdk.im;
 
 import cn.handsome.core.Constants;
 import cn.handsome.sdk.im.client.*;
-import cn.handsome.sdk.im.client.*;
 
 import java.util.Date;
 
@@ -73,7 +72,7 @@ public interface ImClient {
      * @return ImID
      */
     default String generateId(Long id) {
-        return generateId(id, Constants.EMPTY_STR);
+        return generateId(id, Constants.STR_EMPTY);
     }
 
     /**

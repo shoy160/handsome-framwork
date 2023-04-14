@@ -3,10 +3,7 @@ package cn.handsome.core.utils;
 import cn.handsome.core.Constants;
 import lombok.extern.slf4j.Slf4j;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -47,7 +44,7 @@ public final class IdentityUtils {
     }
 
     public static String guid32() {
-        return guid().toString().replaceAll(UUID_SPLIT, Constants.EMPTY_STR);
+        return guid().toString().replaceAll(UUID_SPLIT, Constants.STR_EMPTY);
     }
 
     public static String guid16() {

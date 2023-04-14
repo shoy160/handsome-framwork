@@ -56,7 +56,7 @@ public class HttpResponse {
     }
 
     public String readBody() {
-        return readBody(Constants.EMPTY_STR);
+        return readBody(Constants.STR_EMPTY);
     }
 
     public String readBody(String charset) {

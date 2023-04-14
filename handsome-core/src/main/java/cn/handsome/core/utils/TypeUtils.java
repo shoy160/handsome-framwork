@@ -3,6 +3,7 @@ package cn.handsome.core.utils;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Type Utils
@@ -122,6 +123,12 @@ public class TypeUtils {
 
     public static boolean isArray(Class<?> clazz) {
         return clazz.isArray() || Collection.class.isAssignableFrom(clazz);
+    }
+    public static boolean isArray(Object value) {
+        if (Objects.isNull(value)) {
+            return false;
+        }
+        return isArray(value.getClass());
     }
 
     public static boolean isNumber(Class<?> clazz) {

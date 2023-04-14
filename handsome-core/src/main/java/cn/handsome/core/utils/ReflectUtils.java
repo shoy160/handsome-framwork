@@ -91,7 +91,7 @@ public class ReflectUtils {
     }
 
     public static Set<Class<?>> findClasses(Func<Boolean, Class<?>> filter) {
-        return findClasses(Constants.EMPTY_STR, filter);
+        return findClasses(Constants.STR_EMPTY, filter);
     }
 
     public static Set<Class<?>> findClasses(String pack, Func<Boolean, Class<?>> filter) {

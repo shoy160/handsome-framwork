@@ -36,7 +36,7 @@ public class DefaultDescriptorFinder implements DescriptorFinder {
         Matcher matcher = CLASS_REG.matcher(interfaceClass.getName());
         if (matcher.find()) {
             String faceName = matcher.group(1);
-            name = faceName.replace(FACE_NAME, Constants.EMPTY_STR).concat(name);
+            name = faceName.replace(FACE_NAME, Constants.STR_EMPTY).concat(name);
             String className = interfaceClass.getName().replace(faceName, name);
             log.info("get class name:{}", className);
             return Class.forName(className);

@@ -13,8 +13,6 @@ import java.util.List;
  */
 public interface Constants {
     String APP_NAME = "";
-    String EMPTY_STR = "";
-    String REGION_SPLIT = ":";
     String APPLICATION_VERSION = "1.1.0";
     /**
      * 基础包
@@ -43,6 +41,13 @@ public interface Constants {
         return StrUtil.isNotEmpty(mode) && MODE_LIST.contains(mode);
     }
 
+    String STR_EMPTY = "";
+    String STR_REGION = ":";
+    String STR_LEVEL = ".";
+    String STR_ANY = "*";
+    String STR_SPLIT = ",";
+    String STR_SPACE = " ";
+    
     String CLAIM_USER_ID = "user-id";
     String CLAIM_TENANT_ID = "tenant-id";
     String CLAIM_USERNAME = "user-name";

@@ -27,7 +27,7 @@ public class RedisCache<K, V> extends BaseCache<K, V> {
     private final static String IGNORE_MATCH = "^";
 
     public RedisCache(RedisTemplate<String, V> template) {
-        this(template, Constants.EMPTY_STR);
+        this(template, Constants.STR_EMPTY);
     }
 
     public RedisCache(RedisTemplate<String, V> template, String region) {
@@ -35,7 +35,7 @@ public class RedisCache<K, V> extends BaseCache<K, V> {
     }
 
     public RedisCache(RedisTemplate<String, V> template, RedisKeyExpirationListener expirationListener) {
-        this(template, expirationListener, Constants.EMPTY_STR);
+        this(template, expirationListener, Constants.STR_EMPTY);
 
     }
 
@@ -47,7 +47,7 @@ public class RedisCache<K, V> extends BaseCache<K, V> {
 
     private String getKey(K key) {
         if (key == null) {
-            return Constants.EMPTY_STR;
+            return Constants.STR_EMPTY;
         }
         String stringKey;
         Class<?> clazz = key.getClass();
@@ -67,7 +67,7 @@ public class RedisCache<K, V> extends BaseCache<K, V> {
 
     private K convertKey(String key, Class<K> clazz) {
         String region = this.getRegion();
-        key = key.replaceAll(String.format("^%s:", region), Constants.EMPTY_STR);
+        key = key.replaceAll(String.format("^%s:", region), Constants.STR_EMPTY);
         if (TypeUtils.isSimple(clazz)) {
             return Convert.convert(clazz, key);
         } else {

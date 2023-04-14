@@ -59,7 +59,7 @@ public abstract class BaseController {
      * @return jwt-token
      */
     protected String generateToken(Token token) {
-        return generateToken(token, Constants.EMPTY_STR);
+        return generateToken(token, Constants.STR_EMPTY);
     }
 
     protected HttpServletRequest getRequest() {

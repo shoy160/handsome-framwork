@@ -26,7 +26,7 @@ public @interface EnableAuth {
      *
      * @return string
      */
-    String group() default Constants.EMPTY_STR;
+    String group() default Constants.STR_EMPTY;
 
     /**
      * 权限列表(任一)

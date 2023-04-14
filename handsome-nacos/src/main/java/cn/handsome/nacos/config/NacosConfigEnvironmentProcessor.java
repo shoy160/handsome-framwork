@@ -46,7 +46,7 @@ public class NacosConfigEnvironmentProcessor implements EnvironmentPostProcessor
         }
         Map<String, Object> configMap = new Yaml().load(config);
         Properties properties = new Properties();
-        parseMap(configMap, properties, Constants.EMPTY_STR);
+        parseMap(configMap, properties, Constants.STR_EMPTY);
         PropertySource<?> source = new PropertiesPropertySource(String.format("nacos-%s", dataId), properties);
         environment.getPropertySources().addFirst(source);
     }
@@ -54,7 +54,7 @@ public class NacosConfigEnvironmentProcessor implements EnvironmentPostProcessor
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         String appName = AppContext.getAppName();
-        String mode = AppContext.getAppMode(environment.getActiveProfiles());
+        String mode = AppContext.initAppMode(environment.getActiveProfiles());
         Binder binder = Binder.get(environment);
         BindResult<NacosProperties> configResult = binder.bind("handsome.nacos", NacosProperties.class);
         NacosProperties nacosConfig = configResult.orElse(new NacosProperties());

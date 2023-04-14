@@ -34,7 +34,7 @@ public interface TokenSolver {
      * @return token
      */
     default Token getToken() {
-        return getToken(Constants.EMPTY_STR);
+        return getToken(Constants.STR_EMPTY);
     }
 
     /**
@@ -55,6 +55,6 @@ public interface TokenSolver {
      * @return token凭证
      */
     default String generateToken(Token token) {
-        return generateToken(token, Constants.EMPTY_STR, false);
+        return generateToken(token, Constants.STR_EMPTY, false);
     }
 }

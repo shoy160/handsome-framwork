@@ -29,7 +29,7 @@ import java.util.List;
  */
 @Configuration
 public abstract class BaseSwaggerConfig {
-    protected final static String EMPTY = Constants.EMPTY_STR;
+    protected final static String EMPTY = Constants.STR_EMPTY;
 
     @Resource
     private BaseProperties properties;

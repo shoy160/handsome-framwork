@@ -3,12 +3,15 @@ package cn.handsome.core.utils;
 import cn.handsome.core.Constants;
 import cn.handsome.core.lang.Func;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * todo
@@ -55,7 +58,7 @@ public class MapUtils {
     }
 
     public static String toUrl(Map<String, Object> map) {
-        return toUrl(map, Constants.EMPTY_STR, true);
+        return toUrl(map, Constants.STR_EMPTY, true);
     }
 
     public static String toUrl(Map<String, Object> map, String charset) {
@@ -74,7 +77,7 @@ public class MapUtils {
                 if (filterEmpty) {
                     continue;
                 }
-                value = Constants.EMPTY_STR;
+                value = Constants.STR_EMPTY;
             } else {
                 if (CommonUtils.isNotEmpty(charset)) {
                     try {
@@ -90,5 +93,45 @@ public class MapUtils {
             builder.delete(builder.length() - 1, builder.length());
         }
         return builder.toString();
+    }
+
+    public static <T> T getValueByPath(Map<String, Object> map, Class<T> clazz, String paths) {
+        return getValue(map, clazz, paths.split("\\."));
+    }
+
+    public static <T> T getValue(Map<String, Object> map, Class<T> clazz, String... paths) {
+        if (MapUtil.isEmpty(map)) {
+            return null;
+        }
+        Pattern pattern = PatternPool.get("\\[(\\d+)\\]$", Pattern.DOTALL);
+        Object currentValue = map;
+        for (String path : paths) {
+            if (!(currentValue instanceof Map)) {
+                return null;
+            }
+            Map<String, Object> currentMap = Convert.toMap(String.class, Object.class, currentValue);
+            Matcher matcher = pattern.matcher(path);
+            if (matcher.find()) {
+                //下标处理
+                int index = Convert.toInt(matcher.group(1));
+                String key = path.replace(matcher.group(0), Constants.STR_EMPTY);
+                Object value = currentMap.get(key);
+                if (!TypeUtils.isArray(value)) {
+                    return null;
+                }
+                currentValue = ((ArrayList<?>) value).get(index);
+                continue;
+            }
+            currentValue = currentMap.get(path);
+        }
+        return Objects.isNull(currentValue) ? null : Convert.convert(clazz, currentValue);
+    }
+
+    public static void setValueByPath(Map<String, Object> map, String paths, Object value) {
+        setValue(map, value, paths.split("\\."));
+    }
+
+    public static void setValue(Map<String, Object> map, Object value, String... paths) {
+
     }
 }

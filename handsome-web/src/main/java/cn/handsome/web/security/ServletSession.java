@@ -29,7 +29,7 @@ public class ServletSession extends BaseSession {
         while (names.hasMoreElements()) {
             String name = names.nextElement();
             if (name.startsWith(Constants.CLAIM_PREFIX)) {
-                map.put(name.replace(Constants.CLAIM_PREFIX, Constants.EMPTY_STR), request.getAttribute(name));
+                map.put(name.replace(Constants.CLAIM_PREFIX, Constants.STR_EMPTY), request.getAttribute(name));
             }
         }
         return map;

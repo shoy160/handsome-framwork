@@ -54,7 +54,7 @@ public class HttpHelper {
                     log.debug("Request Header -> {}:{}", key, value);
                 }
             }
-            String boundary = Constants.EMPTY_STR;
+            String boundary = Constants.STR_EMPTY;
             if (request.hasFile()) {
                 boundary = "---------------------------".concat(IdUtil.fastSimpleUUID());
                 connection.setRequestProperty(Constants.HEADER_CONTENT_TYPE, request.getContentType(boundary));

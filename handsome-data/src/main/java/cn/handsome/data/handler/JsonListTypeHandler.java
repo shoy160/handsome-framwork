@@ -31,6 +31,6 @@ public class JsonListTypeHandler<T> extends AbstractJsonTypeHandler<List<T>> {
 
     @Override
     protected String toJson(List<T> obj) {
-        return null == obj ? Constants.EMPTY_STR : JsonUtils.toJson(obj);
+        return null == obj ? Constants.STR_EMPTY : JsonUtils.toJson(obj);
     }
 }

@@ -22,7 +22,7 @@ public class AppContext {
     }
 
     public static String getAppName() {
-        return null == instance ? Constants.EMPTY_STR : instance.appName;
+        return null == instance ? Constants.STR_EMPTY : instance.appName;
     }
 
     public static String getAppMode() {
@@ -50,11 +50,16 @@ public class AppContext {
         }
     }
 
-    public static void setAppMode(String[] activeProfiles) {
+    private static void setAppMode(String[] activeProfiles) {
         String profile = getActiveProfile(activeProfiles);
         if (null != instance) {
             instance.appMode = profile;
         }
+    }
+
+    public static String initAppMode(String[] activeProfiles) {
+        setAppMode(activeProfiles);
+        return getAppMode();
     }
 
     /**
