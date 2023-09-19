@@ -37,11 +37,11 @@ public class RedisLock {
         return getRedissonClient().getLock(key);
     }
 
-    public void tryLock(String key, ActionVoid action) {
+    public void tryLock(String key, Runnable action) {
         tryLock(key, -1, action);
     }
 
-    public void tryLock(String key, long timeout, ActionVoid action) {
+    public void tryLock(String key, long timeout, Runnable action) {
         if (null == action || null == getRedissonClient()) {
             return;
         }
@@ -54,7 +54,7 @@ public class RedisLock {
                 result = lock.tryLock();
             }
             if (result) {
-                action.invoke();
+                action.run();
             }
         } catch (InterruptedException ex) {
             log.warn("获取分布式锁失败：{}", ex.getLocalizedMessage());

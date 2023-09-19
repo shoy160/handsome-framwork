@@ -2,14 +2,20 @@ package cn.handsome.core.utils;
 
 import cn.handsome.core.Constants;
 import cn.handsome.core.lang.Func;
+import cn.handsome.core.lang.Tuple;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +26,7 @@ import java.util.regex.Pattern;
  * @date 2020/8/15
  */
 public class MapUtils {
+    private static final Pattern ARRAY_PATTERN = PatternPool.get("\\[(\\d+)\\]$", Pattern.DOTALL);
 
     public static Map<String, Object> map(Object obj) {
         return map(obj, null);
@@ -100,6 +107,11 @@ public class MapUtils {
     }
 
     public static <T> T getValue(Map<String, Object> map, Class<T> clazz, String... paths) {
+        Object currentValue = getValue(map, paths);
+        return Objects.isNull(currentValue) ? null : Convert.convert(clazz, currentValue);
+    }
+
+    public static Object getValue(Map<String, Object> map, String... paths) {
         if (MapUtil.isEmpty(map)) {
             return null;
         }
@@ -119,19 +131,124 @@ public class MapUtils {
                 if (!TypeUtils.isArray(value)) {
                     return null;
                 }
-                currentValue = ((ArrayList<?>) value).get(index);
+                ArrayList<?> arrayList = (ArrayList<?>) value;
+                if (index >= arrayList.size()) {
+                    return null;
+                }
+                currentValue = arrayList.get(index);
                 continue;
             }
             currentValue = currentMap.get(path);
         }
-        return Objects.isNull(currentValue) ? null : Convert.convert(clazz, currentValue);
+        return currentValue;
     }
 
-    public static void setValueByPath(Map<String, Object> map, String paths, Object value) {
-        setValue(map, value, paths.split("\\."));
+    public static boolean setValue(Map<String, Object> map, String paths, Object value) {
+        return setValue(map, value, paths.split("\\."));
     }
 
-    public static void setValue(Map<String, Object> map, Object value, String... paths) {
+    public static boolean setValue(Map<String, Object> map, Object value, String... paths) {
+        return setValue(map, value, true, paths);
+    }
 
+    public static boolean setValue(
+            Map<String, Object> map, Object value, boolean initArray, String... paths
+    ) {
+        if (Objects.isNull(map)) {
+            return false;
+        }
+        Pattern pattern = PatternPool.get("\\[(\\d+)\\]$", Pattern.DOTALL);
+        Object currentValue = map;
+        final int pathLength = paths.length;
+        for (int i = 0; i < pathLength; i++) {
+            String path = paths[i];
+            if (!(currentValue instanceof Map)) {
+                return false;
+            }
+            boolean isLatestPath = Objects.equals(i, pathLength - 1);
+            Map<String, Object> currentMap = (Map<String, Object>) currentValue;
+            Matcher matcher = pattern.matcher(path);
+            if (matcher.find()) {
+                //下标处理
+                int index = Convert.toInt(matcher.group(1));
+                String key = path.replace(matcher.group(0), Constants.STR_EMPTY);
+                Object arrayValue = currentMap.get(key);
+                if (Objects.isNull(arrayValue) && initArray) {
+                    arrayValue = new ArrayList<>();
+                    currentMap.put(key, arrayValue);
+                }
+                if (!TypeUtils.isArray(arrayValue)) {
+                    return false;
+                }
+                ArrayList<Object> arrayList = (ArrayList<Object>) arrayValue;
+                if (isLatestPath) {
+                    if (index <= arrayList.size() - 1) {
+                        arrayList.set(index, value);
+                    } else {
+                        arrayList.add(value);
+                    }
+                    return true;
+                } else {
+                    if (index <= arrayList.size() - 1) {
+                        currentValue = arrayList.get(index);
+                    } else {
+                        currentValue = new HashMap<>(0);
+                        arrayList.add(currentValue);
+                    }
+                }
+                continue;
+            }
+            if (isLatestPath) {
+                currentMap.put(path, value);
+                return true;
+            }
+            currentValue = currentMap.get(path);
+            if (Objects.isNull(currentValue)) {
+                currentValue = new HashMap<>(0);
+                currentMap.put(path, currentValue);
+            }
+        }
+        return false;
+    }
+
+    public static <T> T tryGetValue(Class<T> clazz, Map<String, Object> data, String... keys) {
+        if (MapUtil.isEmpty(data)) {
+            return null;
+        }
+        for (String key : keys) {
+            T value = MapUtil.get(data, key, clazz);
+            if (ObjectUtil.isNotEmpty(value)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    public static String tryGetStrValue(Map<String, Object> data, String... keys) {
+        return tryGetValue(String.class, data, keys);
+    }
+
+    public static Object popValue(Map<String, Object> data, String... keys) {
+        if (MapUtil.isEmpty(data)) {
+            return null;
+        }
+        for (String key : keys) {
+            Object value = data.remove(key);
+            if (Objects.nonNull(value)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    private static Tuple<String, Integer> getPathKey(String path) {
+        Matcher matcher = ARRAY_PATTERN.matcher(path);
+        if (matcher.find()) {
+            //下标处理
+            int index = Convert.toInt(matcher.group(1));
+            String key = path.replace(matcher.group(0), Constants.STR_EMPTY);
+            return Tuple.of(key, index);
+        }
+        return Tuple.of(path, null);
     }
 }

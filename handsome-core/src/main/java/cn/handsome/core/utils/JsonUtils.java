@@ -1,6 +1,7 @@
 package cn.handsome.core.utils;
 
 import cn.handsome.core.Constants;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Json辅助类
@@ -40,6 +42,9 @@ public class JsonUtils {
     }
 
     public static String toJson(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
         try {
             ObjectMapper mapper = getMapper();
             return mapper.writeValueAsString(source);
@@ -50,6 +55,9 @@ public class JsonUtils {
     }
 
     public static <T> T json(String content, Class<T> clazz) {
+        if (StrUtil.isBlank(content)) {
+            return null;
+        }
         try {
             ObjectMapper mapper = getMapper();
             return mapper.readValue(content, clazz);
@@ -124,7 +132,7 @@ public class JsonUtils {
             return mapper.readValue(content, listType);
         } catch (Exception ex) {
             log.warn("json反序列化异常", ex);
-            return null;
+            return new ArrayList<>();
         }
     }
 

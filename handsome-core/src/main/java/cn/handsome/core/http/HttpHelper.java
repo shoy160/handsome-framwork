@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * HttpHelper
@@ -78,11 +79,8 @@ public class HttpHelper {
             connection.connect();
             int code = connection.getResponseCode();
             response.setCode(code);
-            InputStream body;
-            if (code == Constants.CODE_SUCCESS) {
-                //获取返回的数据
-                body = connection.getInputStream();
-            } else {
+            InputStream body = connection.getInputStream();
+            if (Objects.isNull(body)) {
                 body = connection.getErrorStream();
             }
             response.setBody(StreamUtils.array(body));

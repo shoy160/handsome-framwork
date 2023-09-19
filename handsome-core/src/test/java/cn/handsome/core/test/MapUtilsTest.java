@@ -54,7 +54,7 @@ public class MapUtilsTest {
             "      \"type\": \"SIMPLE\",\n" +
             "      \"decisionCases\": {},\n" +
             "      \"defaultCase\": [],\n" +
-            "      \"forkTasks\": [],\n" +
+            "      \"forkTasks\": [1,2],\n" +
             "      \"startDelay\": 0,\n" +
             "      \"joinOn\": [],\n" +
             "      \"optional\": false,\n" +
@@ -77,5 +77,14 @@ public class MapUtilsTest {
         String value =
                 MapUtils.getValueByPath(this.currentMap, String.class, paths);
         log.info("value: {}", value);
+    }
+
+    @Test
+    public void setValueTest() {
+        String paths = "inputParameters.$view.position.y";
+//        String paths = "inputParameters.configuration.list[1]";
+//        String paths = "forkTasks[1]";
+        MapUtils.setValue(this.currentMap, paths, 459);
+        log.info("value: {}", MapUtils.getValueByPath(this.currentMap, Double.class, paths));
     }
 }

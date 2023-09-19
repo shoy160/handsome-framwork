@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
         <groupId>org.springframework.boot</groupId>
-        <version>2.5.6</version>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.15</version>
     </parent>
     <groupId>cn.handsome.framework</groupId>
     <artifactId>framework</artifactId>
@@ -19,8 +19,8 @@
     <properties>
         <version.framework>1.1.7</version.framework>
         <version.java>1.8</version.java>
-        <version.springboot>2.5.6</version.springboot>
-        <version.hutool>5.7.15</version.hutool>
+        <version.springboot>2.7.15</version.springboot>
+        <version.hutool>5.8.21</version.hutool>
         <version.compile>8</version.compile>
         <skipTests>true</skipTests>
     </properties>
@@ -38,7 +38,7 @@
         <module>handsome-web</module>
         <module>handsome-web-jwt</module>
         <module>sample</module>
-        <!--        <module>tool</module>-->
+        <module>tool</module>
 
     </modules>
     <dependencyManagement>
