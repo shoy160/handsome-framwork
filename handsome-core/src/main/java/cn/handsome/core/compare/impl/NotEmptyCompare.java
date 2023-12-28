@@ -1,0 +1,22 @@
+package cn.handsome.core.compare.impl;
+
+import cn.handsome.core.compare.BaseCompare;
+import cn.handsome.core.compare.enums.ConditionOp;
+import cn.hutool.core.util.ObjUtil;
+
+import java.util.Objects;
+
+/**
+ * @author luoyong
+ * @date 2023/6/25
+ */
+public class NotEmptyCompare extends BaseCompare {
+    public NotEmptyCompare() {
+        super(ConditionOp.NOT_EMPTY);
+    }
+
+    @Override
+    public boolean compare(Object value, Object compareTo) {
+        return Objects.nonNull(value) && ObjUtil.isNotEmpty(value);
+    }
+}
