@@ -1,6 +1,7 @@
 package cn.handsome.data.launcher;
 
 import cn.handsome.core.launcher.Launcher;
+import cn.handsome.data.DataAdapterFactory;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.DbType;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,9 @@ public class MybatisLauncher implements Launcher {
             }
         }
         log.info("Config For DbType -> {}", dbType);
-        switch (DbType.valueOf(dbType)) {
+        DbType type = DbType.valueOf(dbType);
+        DataAdapterFactory.init(type);
+        switch (type) {
             case MYSQL:
                 setDbConfig(props, PROP_COLUMN_FORMAT, "`%s`");
                 setDbConfig(props, PROP_LOGIC_DELETE_VALUE, "1");
