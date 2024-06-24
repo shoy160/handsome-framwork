@@ -23,7 +23,7 @@ public final class DataAdapterFactory {
 
     private DataAdapterFactory(DbType dbType) {
         this.dbType = dbType;
-        Set<Class<?>> adapters = ReflectUtils.findClasses(DataAdapter.class::isAssignableFrom);
+        Set<Class<?>> adapters = ReflectUtils.findClasses(t -> DataAdapter.class.isAssignableFrom(t) && !t.isInterface());
         for (Class<?> clazz : adapters) {
             Object instance = ReflectUtil.newInstance(clazz);
             if (instance instanceof DataAdapter) {

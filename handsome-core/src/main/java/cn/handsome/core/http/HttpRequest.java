@@ -2,9 +2,11 @@ package cn.handsome.core.http;
 
 import cn.handsome.core.http.enums.HttpContentType;
 import cn.handsome.core.http.enums.HttpMethod;
-import cn.handsome.core.lang.Func;
-import cn.handsome.core.utils.*;
-import cn.handsome.core.utils.*;
+import cn.handsome.core.utils.CommonUtils;
+import cn.handsome.core.utils.JsonUtils;
+import cn.handsome.core.utils.MapUtils;
+import cn.handsome.core.utils.TypeUtils;
+import cn.handsome.core.utils.XmlUtils;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author shay
@@ -34,7 +37,7 @@ public class HttpRequest {
     private Integer readTimeout;
     private Map<String, String> headers;
     private Map<String, byte[]> files;
-    private Func<String, String> keyEditor;
+    private Function<String, String> keyEditor;
 
     public HttpRequest(String url) {
         this(url, HttpMethod.GET, null);

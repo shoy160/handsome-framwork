@@ -48,6 +48,7 @@ public class HandsomeApplication extends SpringApplication {
         });
         ConfigurableApplicationContext context = super.run(args);
         manager.onLoad();
+        AppContext.setAppContext(context);
         return context;
     }
 

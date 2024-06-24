@@ -2,10 +2,13 @@ package cn.handsome.core;
 
 import cn.handsome.core.utils.CommonUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author shay
@@ -16,6 +19,8 @@ public class AppContext {
     private final String appName;
     private String appMode;
     private static AppContext instance;
+    @Setter
+    private static ApplicationContext appContext;
 
     public static void init(String appName) {
         instance = new AppContext(appName);
@@ -120,5 +125,27 @@ public class AppContext {
             return false;
         }
         return Arrays.asList(modes).contains(instance.appMode);
+    }
+
+    public static <T> T getBean(Class<T> clazz) {
+        if (Objects.isNull(appContext)) {
+            return null;
+        }
+        try {
+            return appContext.getBean(clazz);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    public static Object getBean(String beanName) {
+        if (Objects.isNull(appContext)) {
+            return null;
+        }
+        try {
+            return appContext.getBean(beanName);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 }

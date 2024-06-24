@@ -1,21 +1,24 @@
 package cn.handsome.core.utils;
 
 import cn.handsome.core.Constants;
-import cn.handsome.core.lang.Func;
 import cn.handsome.core.lang.Tuple;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +28,7 @@ import java.util.regex.Pattern;
  * @author shay
  * @date 2020/8/15
  */
+@Slf4j
 public class MapUtils {
     private static final Pattern ARRAY_PATTERN = PatternPool.get("\\[(\\d+)\\]$", Pattern.DOTALL);
 
@@ -32,18 +36,30 @@ public class MapUtils {
         return map(obj, null);
     }
 
-    public static Map<String, Object> map(Object obj, Func<String, String> keyEditor) {
+    public static Map<String, Object> map(Object obj, Function<String, String> keyEditor) {
         Map<String, Object> map = new HashMap<>();
-        if (obj == null) {
+        if (Objects.isNull(obj)) {
             return map;
         }
         try {
+            if (TypeUtils.isString(obj)) {
+                // json
+                map = JsonUtils.jsonMap(obj.toString());
+                return mapKeyEditor(map, keyEditor);
+            }
             if (obj instanceof Map) {
+                // Map
+                try {
+                    map = (Map<String, Object>) obj;
+                    return mapKeyEditor(map, keyEditor);
+                } catch (Exception ignored) {
+                }
+                map = new HashMap<>();
                 Map<?, ?> item = (Map<?, ?>) obj;
                 for (Object key : item.keySet()) {
                     String mapKey = key.toString();
                     if (null != keyEditor) {
-                        mapKey = keyEditor.invoke(mapKey);
+                        mapKey = keyEditor.apply(mapKey);
                     }
                     if (StrUtil.isBlank(mapKey)) {
                         continue;
@@ -54,14 +70,43 @@ public class MapUtils {
             }
             return BeanUtil.beanToMap(obj, new LinkedHashMap<>(), false, t -> {
                 if (null != keyEditor) {
-                    return keyEditor.invoke(t);
+                    return keyEditor.apply(t);
                 }
                 return t;
             });
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.warn(ex.getMessage(), ex);
             return map;
         }
+    }
+
+    private static Map<String, Object> mapKeyEditor(
+            Map<String, Object> map, Function<String, String> keyEditor
+    ) {
+        if (MapUtil.isEmpty(map)) {
+            return new HashMap<>(0);
+        }
+        if (Objects.isNull(keyEditor)) {
+            return map;
+        }
+        Map<String, Object> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = keyEditor.apply(entry.getKey());
+            if (StrUtil.isBlank(key)) {
+                continue;
+            }
+            newMap.put(key, entry.getValue());
+        }
+        return newMap;
+    }
+
+    public static Map<String, Object> filter(Map<String, Object> data, Collection<String> keys) {
+        if (MapUtil.isEmpty(data) || CollUtil.isEmpty(keys)) {
+            return new HashMap<>(0);
+        }
+        return data.entrySet().stream()
+                .filter(t -> keys.contains(t.getKey()))
+                .collect(HashMap::new, (k, v) -> k.put(v.getKey(), v.getValue()), HashMap::putAll);
     }
 
     public static String toUrl(Map<String, Object> map) {
@@ -90,7 +135,7 @@ public class MapUtils {
                     try {
                         value = URLEncoder.encode(value, charset);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        log.warn("URL encode error", ex);
                     }
                 }
             }
