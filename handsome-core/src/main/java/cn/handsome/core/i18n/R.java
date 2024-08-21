@@ -2,7 +2,7 @@ package cn.handsome.core.i18n;
 
 import cn.handsome.core.AppContext;
 import cn.hutool.core.util.StrUtil;
-import org.springframework.core.env.Environment;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -11,26 +11,38 @@ import java.util.Objects;
  * @author luoyong
  * @date 2024/6/20
  */
+@Slf4j
 public final class R {
-    private final static MessageResource messageResource;
+    private final static MessageResource messageResource = new MessageResource();
 
-    static {
-        Environment environment = AppContext.getBean(Environment.class);
-        messageResource = new MessageResource(environment);
+    public static Locale parseLanguage(String language) {
+        String[] array;
+        if (StrUtil.isBlank(language) || (array = language.split("[-_]")).length != 2) {
+            return null;
+        }
+        return new Locale(array[0], array[1]);
     }
 
-    public static Locale convert(String language) {
+    public static String getLanguage() {
+        Locale locale = getLocale();
+        return String.format("%s-%s", locale.getLanguage(), locale.getCountry());
+    }
+
+    public static Locale getLocale() {
+        return getLocale(null);
+    }
+
+    public static Locale getLocale(String language) {
         try {
-            String[] array;
-            if (StrUtil.isNotBlank(language) && (array = language.split("-")).length == 2) {
-                return new Locale(array[0], array[1]);
+            Locale locale = parseLanguage(language);
+            if (Objects.nonNull(locale)) {
+                return locale;
+            }
+            ILocaleResolver resolver = AppContext.getBean(ILocaleResolver.class);
+            if (Objects.nonNull(resolver)) {
+                return resolver.getLocale();
             }
         } catch (Exception ignored) {
-        }
-
-        ILocaleResolver resolver = AppContext.getBean(ILocaleResolver.class);
-        if (Objects.nonNull(resolver)) {
-            return resolver.getLocale();
         }
         return Locale.getDefault();
     }
@@ -60,7 +72,8 @@ public final class R {
     }
 
     public static String message(String code, Object[] args, String language, String def) {
-        Locale locale = convert(language);
+        Locale locale = getLocale(language);
+        log.info("当前语言为：{}", locale.getDisplayName());
         return messageResource.getMessage(code, args, locale, def);
     }
 }

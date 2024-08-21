@@ -1,5 +1,6 @@
 package cn.handsome.core.i18n;
 
+import cn.handsome.core.AppContext;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
@@ -15,14 +16,15 @@ import java.util.Objects;
 public class MessageResource {
     private final ResourceBundleMessageSource messageSource;
 
-    public MessageResource(Environment environment) {
-        this(environment, null);
+    public MessageResource() {
+        this(null);
     }
 
-    public MessageResource(Environment environment, String basename) {
+    public MessageResource(String basename) {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.toString());
         if (StrUtil.isBlank(basename)) {
+            Environment environment = AppContext.getBean(Environment.class);
             if (Objects.nonNull(environment)) {
                 basename = environment.resolvePlaceholders("${spring.messages.basename:i18n/messages}");
             } else {
