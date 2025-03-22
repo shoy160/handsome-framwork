@@ -17,5 +17,7 @@
         <module>handsome-demo-business</module>
         <module>handsome-demo-web</module>
         <module>handsome-graphql-web</module>
+        <module>handsome-demo-sharding</module>
+        <module>handsome-demo-config</module>
     </modules>
 </project>

@@ -39,6 +39,7 @@
         <module>handsome-web-jwt</module>
         <module>sample</module>
         <module>tool</module>
+        <module>handsome-powershell</module>
 
     </modules>
     <dependencyManagement>

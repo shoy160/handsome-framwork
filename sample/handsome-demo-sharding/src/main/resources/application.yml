@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  shardingsphere:
+    props:
+      sql-show: true
+    datasource:
+      names: ds1
+      common:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://120.53.243.146:13306/db_sharding01
+        username: root
+        password: hs@123456
+    rules:
+      sharding:
+        sharding-algorithms:
+          record:
+            type: INLINE
+            props:
+              algorithm-expression: record$->{ event_id % 5 + 1 }
+        tables:
+          record:
+            actual-data-nodes: ds1.record$->{1..5}
+            database-strategy:
+              standard:
+                sharding-column: event_id
+                sharding-algorithm-name: record
