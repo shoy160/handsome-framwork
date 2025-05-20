@@ -2,6 +2,7 @@ package cn.handsome.core.compare.impl;
 
 import cn.handsome.core.compare.BaseCompare;
 import cn.handsome.core.compare.enums.ConditionOp;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import java.util.List;
  * @author luoyong
  * @date 2023/6/25
  */
+@Component
 public class OnlyInCertainValuesCompare extends BaseCompare {
     public OnlyInCertainValuesCompare() {
         super(ConditionOp.ONLY_IN_CERTAIN_VALUES);

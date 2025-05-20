@@ -1,11 +1,16 @@
 package cn.handsome.core.utils;
 
 import cn.handsome.core.Constants;
+import cn.handsome.core.lang.Func;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import cn.handsome.core.lang.Func;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -21,6 +26,7 @@ import java.util.Objects;
  */
 @Slf4j
 public class JsonUtils {
+    private static final String REG_JSON = "^(\\{[\\w\\W]*\\})|(\\[[\\w\\W]*\\])$";
 
     private static ObjectMapper mapper;
 
@@ -39,6 +45,68 @@ public class JsonUtils {
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
         JsonUtils.mapper = mapper;
         return mapper;
+    }
+
+
+    public enum JsonType {
+        /**
+         * 对象
+         */
+        OBJECT,
+        /**
+         * 数组
+         */
+        ARRAY,
+        /**
+         * 基础类型
+         */
+        SCALAR,
+        /**
+         * 非 json
+         */
+        NOT_JSON
+    }
+
+    /**
+     * 判断字符串是否为 JSON 格式，并区分对象和数组
+     */
+    public static JsonType getJsonType(String jsonStr) {
+        if (jsonStr == null || jsonStr.trim().isEmpty()) {
+            return JsonType.NOT_JSON;
+        }
+
+        jsonStr = jsonStr.trim();
+        if (!ReUtil.isMatch(REG_JSON, jsonStr)) {
+            return JsonType.NOT_JSON;
+        }
+        try {
+            ObjectMapper mapper = getMapper();
+            // 解析 JSON 字符串
+            JsonNode jsonNode = mapper.readTree(jsonStr);
+            if (jsonNode.isObject()) {
+                return JsonType.OBJECT;
+            } else if (jsonNode.isArray()) {
+                return JsonType.ARRAY;
+            } else {
+                // 可能是基本类型（如数字、字符串）的 JSON
+                return JsonType.SCALAR;
+            }
+        } catch (Exception e) {
+            // 解析失败，不是 JSON
+            return JsonType.NOT_JSON;
+        }
+    }
+
+    public static boolean isObjectJsonStr(String value) {
+        return JsonType.OBJECT.equals(getJsonType(value));
+    }
+
+    public static boolean isArrayJsonStr(String value) {
+        return JsonType.ARRAY.equals(getJsonType(value));
+    }
+
+    public static boolean isJsonStr(String value) {
+        return !JsonType.NOT_JSON.equals(getJsonType(value));
     }
 
     public static String toJson(Object source) {

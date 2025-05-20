@@ -2,12 +2,13 @@ package cn.handsome.core.compare.impl;
 
 import cn.handsome.core.compare.BaseCompare;
 import cn.handsome.core.compare.enums.ConditionOp;
-import cn.hutool.core.util.ObjUtil;
+import org.springframework.stereotype.Component;
 
 /**
  * @author luoyong
  * @date 2023/6/25
  */
+@Component
 public class NotEqualsCompare extends BaseCompare {
     public NotEqualsCompare() {
         super(ConditionOp.NOT_EQ);
@@ -15,6 +16,6 @@ public class NotEqualsCompare extends BaseCompare {
 
     @Override
     public boolean compare(Object value, Object compareTo) {
-        return ObjUtil.notEqual(value, compareTo);
+        return !objEquals(value, compareTo);
     }
 }

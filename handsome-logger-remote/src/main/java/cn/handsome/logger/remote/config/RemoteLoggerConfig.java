@@ -4,7 +4,7 @@ import cn.handsome.core.logger.LoggerHandler;
 import cn.handsome.logger.remote.RemoteLogger;
 import cn.handsome.logger.remote.RemoteLoggerManager;
 import cn.handsome.logger.remote.logger.DefaultRemoteLogger;
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.handsome.logger.remote.logger.RemoteLoggerHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,23 +18,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RemoteLoggerConfig {
 
-    private LoggerHandler[] handlers;
-
-    @Autowired(required = false)
-    public void setHandlers(LoggerHandler[] handlers) {
-        this.handlers = handlers;
+    @Bean
+    @ConditionalOnMissingBean
+    public RemoteLoggerHandler getRemoteLoggerHandler(RemoteLoggerProperties config) {
+        return new RemoteLoggerHandler(config);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @SuppressWarnings("all")
     public RemoteLoggerManager loggerManager(RemoteLoggerProperties config) {
-        return new RemoteLoggerManager(config, this.handlers);
+        return new RemoteLoggerManager(config);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public RemoteLogger remoteLogger(RemoteLoggerManager socketManager) {
-        return new DefaultRemoteLogger(socketManager);
+    public RemoteLogger remoteLogger(RemoteLoggerManager socketManager, LoggerHandler[] handlers) {
+        return new DefaultRemoteLogger(handlers, socketManager);
     }
 }

@@ -23,6 +23,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${version.springboot}</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.graphql-java</groupId>-->

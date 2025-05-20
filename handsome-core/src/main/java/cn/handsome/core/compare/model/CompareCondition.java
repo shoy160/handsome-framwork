@@ -1,7 +1,9 @@
 package cn.handsome.core.compare.model;
 
 import cn.handsome.core.compare.enums.ConditionOp;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -10,6 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CompareCondition {
     private String key;
     private String dataType;

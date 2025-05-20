@@ -1,5 +1,6 @@
 package cn.handsome.core.compare;
 
+import cn.handsome.core.Constants;
 import cn.handsome.core.Singleton;
 import cn.handsome.core.compare.enums.ConditionConjunction;
 import cn.handsome.core.compare.enums.ConditionOp;
@@ -16,19 +17,21 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
-import sun.reflect.misc.ReflectUtil;
+import org.springframework.stereotype.Component;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * 数据过滤器
@@ -37,25 +40,17 @@ import java.util.stream.Collectors;
  * @date 2023/6/25
  */
 @Slf4j
+@Component
 public class CompareFactory {
     private final Map<ConditionOp, ICompare> compareMap;
     private final ScriptEngine scriptEngine;
 
     private CompareFactory() {
         compareMap = new HashMap<>();
-        List<BaseCompare> compareList = ReflectUtils.findClasses(ICompare.class::isAssignableFrom)
-                .stream().map(t -> {
-                    try {
-                        return (BaseCompare) ReflectUtil.newInstance(t);
-                    } catch (InstantiationException | IllegalAccessException e) {
-                        log.warn(String.format("Compare 加载失败：%s", t.getSimpleName()), e);
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        for (ICompare compare : compareList) {
-            compareMap.put(compare.getOperation(), compare);
+        Set<Class<?>> classes = ReflectUtils.findClasses(ICompare.class::isAssignableFrom);
+        for (Class<?> clazz : classes) {
+            ICompare instance = (ICompare) ReflectUtil.newInstance(clazz);
+            compareMap.put(instance.getOperation(), instance);
         }
         // create a script engine manager
         ScriptEngineManager factory = new ScriptEngineManager();
@@ -64,7 +59,7 @@ public class CompareFactory {
     }
 
     public static CompareFactory getInstance() {
-        return Singleton.instance(new CompareFactory());
+        return Singleton.instance(CompareFactory.class);
     }
 
     /**
@@ -90,7 +85,9 @@ public class CompareFactory {
             // $item 当前实体，$ 上下文
             Object valueToCompare = resolveContext(item, context, condition.getValue());
             boolean isMatch = isMatch(condition, value, valueToCompare);
-
+            if (filterCondition.isEnableLog()) {
+                log.debug("「条件匹配」{} [{}] {} {}：{}", condition.getKey(), value, condition.getOp(), valueToCompare, isMatch);
+            }
             if (conjunction == ConditionConjunction.and) {
                 // and 条件，有一个不匹配，返回 false
                 if (!isMatch) {
@@ -115,6 +112,7 @@ public class CompareFactory {
                 if (!isMatch) {
                     return false;
                 }
+                result = true;
             } else if (conjunction == ConditionConjunction.or) {
                 // or 条件，有一个匹配，返回 true
                 if (isMatch) {
@@ -133,9 +131,31 @@ public class CompareFactory {
     ) {
         ICompare compare = getCompare(condition);
         if (Objects.nonNull(compare)) {
+            String dataType = condition.getDataType();
+            switch (dataType) {
+                case "date":
+                case "datetime":
+                    value = toDate(value);
+                    valueToCompare = toDate(valueToCompare);
+                    break;
+                default:
+                    break;
+            }
             return compare.compare(value, valueToCompare);
         }
         return false;
+    }
+
+    private Date toDate(Object value) {
+        Date date;
+        if (value instanceof Integer) {
+            date = new Date((Integer) value * 1000L);
+        } else if (value instanceof Long) {
+            date = new Date((Long) value);
+        } else {
+            date = Convert.toDate(value);
+        }
+        return date;
     }
 
     private ICompare getCompare(CompareCondition condition) {
@@ -156,10 +176,10 @@ public class CompareFactory {
     private Object resolveValue(
             Map<String, Object> data, Map<String, Object> context, String key
     ) {
-        if (key.contains("$")) {
+        if (key.contains(Constants.DOLLAR)) {
             return evalScript(data, context, key);
         }
-        return data.get(key);
+        return MapUtils.getValue(data, key);
     }
 
     private Object resolveContext(Map<String, Object> data, Map<String, Object> context, Object value) {
@@ -183,7 +203,7 @@ public class CompareFactory {
                 return contextValue;
             }
         }
-        if (expression.contains("$")) {
+        if (expression.contains(Constants.DOLLAR)) {
             return evalScript(data, context, expression);
         }
         return null;
@@ -249,22 +269,26 @@ public class CompareFactory {
         if (isAllEmpty(source, target)) {
             return false;
         }
-        if (isObjectJson(target)) {
-            if (!isObjectJson(source)) {
-                return true;
+        try {
+            // 实体或列表对比
+            if (isObjectJson(target)) {
+                if (!isObjectJson(source)) {
+                    return true;
+                }
+                Map<String, Object> sourceMap = JsonUtils.jsonMap(source);
+                Map<String, Object> targetMap = JsonUtils.jsonMap(target);
+                return !mapEquals(sourceMap, targetMap);
             }
-            Map<String, Object> sourceMap = JsonUtils.jsonMap(source);
-            Map<String, Object> targetMap = JsonUtils.jsonMap(target);
-            return !mapEquals(sourceMap, targetMap);
-        }
-        if (isArrayJson(target)) {
-            if (!isArrayJson(source)) {
-                return true;
+            if (isArrayJson(target)) {
+                if (!isArrayJson(source)) {
+                    return true;
+                }
+                List<Object> sourceList = JsonUtils.jsonList(source, Object.class);
+                List<Object> targetList = JsonUtils.jsonList(target, Object.class);
+                return sourceList.size() != targetList.size()
+                        || sourceList.stream().anyMatch(s -> targetList.stream().noneMatch(t -> objectEquals(s, t)));
             }
-            List<Object> sourceList = JsonUtils.jsonList(source, Object.class);
-            List<Object> targetList = JsonUtils.jsonList(target, Object.class);
-            return sourceList.size() != targetList.size()
-                    || sourceList.stream().anyMatch(s -> targetList.stream().noneMatch(t -> objectEquals(s, t)));
+        } catch (Exception ignored) {
         }
         return !objectEquals(source, target);
     }

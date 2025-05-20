@@ -20,11 +20,13 @@ public class CompareConditions {
     private ConditionConjunction conjunction;
     private List<CompareCondition> conditions;
     private List<CompareConditions> groups;
-    private String groupsId;
+    private String groups_id;
+    private boolean enableLog;
 
     public CompareConditions() {
         this.conditions = new ArrayList<>();
         this.groups = new ArrayList<>();
+        this.enableLog = false;
     }
 
     public List<CompareCondition> getConditions() {

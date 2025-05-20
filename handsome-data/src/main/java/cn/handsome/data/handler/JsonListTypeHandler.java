@@ -21,16 +21,17 @@ public class JsonListTypeHandler<T> extends AbstractJsonTypeHandler<List<T>> {
     private final Class<T> type;
 
     public JsonListTypeHandler(Class<T> type) {
+        super(type);
         this.type = type;
     }
 
     @Override
-    protected List<T> parse(String json) {
+    public List<T> parse(String json) {
         return StrUtil.isBlank(json) ? new ArrayList<>() : JsonUtils.jsonList(json, type);
     }
 
     @Override
-    protected String toJson(List<T> obj) {
+    public String toJson(List<T> obj) {
         return null == obj ? Constants.STR_EMPTY : JsonUtils.toJson(obj);
     }
 }

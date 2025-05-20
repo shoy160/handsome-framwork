@@ -2,11 +2,12 @@ package cn.handsome.logger.remote.config;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import cn.handsome.core.logger.LoggerHandler;
 import cn.handsome.logger.remote.RemoteLoggerManager;
 import cn.handsome.logger.remote.appender.RemoteAppender;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.impl.StaticLoggerBinder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -17,18 +18,17 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RemoteLoggerRunner implements ApplicationRunner {
-    private RemoteLoggerManager socketManager;
+    private final RemoteLoggerManager socketManager;
+    private final LoggerHandler[] loggerHandlers;
 
-    @Autowired(required = false)
-    public void setSocketManager(RemoteLoggerManager socketManager) {
-        this.socketManager = socketManager;
-    }
 
     @Override
     public void run(ApplicationArguments args) {
-        LoggerContext context = (LoggerContext) StaticLoggerBinder.getSingleton().getLoggerFactory();
-        RemoteAppender appender = new RemoteAppender(socketManager);
+        // 获取 LoggerContext
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+        RemoteAppender appender = new RemoteAppender(socketManager, loggerHandlers);
         appender.setContext(context);
         appender.start();
         context.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(appender);

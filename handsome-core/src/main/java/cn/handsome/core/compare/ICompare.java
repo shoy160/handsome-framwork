@@ -1,6 +1,5 @@
 package cn.handsome.core.compare;
 
-
 import cn.handsome.core.compare.enums.ConditionOp;
 
 /**

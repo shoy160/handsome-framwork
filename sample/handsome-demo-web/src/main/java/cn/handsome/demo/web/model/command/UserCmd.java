@@ -4,11 +4,11 @@ import cn.handsome.demo.domain.enums.GenderEnum;
 import cn.handsome.demo.domain.po.UserPO;
 import cn.handsome.web.model.command.MobileCmd;
 import io.swagger.annotations.ApiModelProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**

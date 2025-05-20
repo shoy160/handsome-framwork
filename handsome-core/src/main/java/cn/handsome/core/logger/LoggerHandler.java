@@ -12,5 +12,5 @@ public interface LoggerHandler {
      *
      * @param message 消息
      */
-    void complete(Map<String, Object> message);
+    void render(Map<String, Object> message);
 }

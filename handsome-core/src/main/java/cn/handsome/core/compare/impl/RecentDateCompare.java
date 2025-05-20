@@ -5,6 +5,7 @@ import cn.handsome.core.compare.enums.ConditionOp;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -12,6 +13,7 @@ import java.util.Date;
  * @author luoyong
  * @date 2023/6/25
  */
+@Component
 public class RecentDateCompare extends BaseCompare {
     public RecentDateCompare() {
         super(ConditionOp.RECENT_DATE);

@@ -1,11 +1,13 @@
 package cn.handsome.core.policy;
 
 import cn.handsome.core.policy.attempt.Attempt;
+import lombok.Getter;
 
 /**
  * @author luoyong
  * @date 2023/2/8
  */
+@Getter
 public final class RetryException extends Exception {
     private final int times;
     private final Attempt<?> lastFailedAttempt;
@@ -18,13 +20,5 @@ public final class RetryException extends Exception {
         super(message, lastFailedAttempt.hasException() ? lastFailedAttempt.getExceptionCause() : null);
         this.times = numberOfFailedAttempts;
         this.lastFailedAttempt = lastFailedAttempt;
-    }
-
-    public int getTimes() {
-        return this.times;
-    }
-
-    public Attempt<?> getLastFailedAttempt() {
-        return this.lastFailedAttempt;
     }
 }

@@ -4,13 +4,13 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.AppenderBase;
+import cn.handsome.core.logger.LogMessage;
+import cn.handsome.core.logger.LoggerHandler;
+import cn.handsome.core.utils.CommonUtils;
+import cn.handsome.core.utils.JsonUtils;
 import cn.handsome.logger.remote.RemoteLoggerManager;
 import cn.hutool.core.util.ArrayUtil;
-import cn.handsome.core.utils.CommonUtils;
 import org.slf4j.event.Level;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author shay
@@ -18,13 +18,15 @@ import java.util.Map;
  */
 public class RemoteAppender extends AppenderBase<ILoggingEvent> {
     private final RemoteLoggerManager socketManager;
+    private final LoggerHandler[] loggerHandlers;
     private final static String[] EXCLUDE_LOGGERS = new String[]{
             "cn.handsome.web.GlobalExceptionResolver",
             "cn.handsome.log.RemoteLoggerManager"
     };
 
-    public RemoteAppender(RemoteLoggerManager socketManager) {
+    public RemoteAppender(RemoteLoggerManager socketManager, LoggerHandler[] loggerHandlers) {
         this.socketManager = socketManager;
+        this.loggerHandlers = loggerHandlers;
     }
 
     private String formatThrowable(IThrowableProxy proxy) {
@@ -50,14 +52,15 @@ public class RemoteAppender extends AppenderBase<ILoggingEvent> {
         if (!socketManager.isEnabled(level)) {
             return;
         }
-        Map<String, Object> map = new HashMap<>();
-        map.put("message", event.getFormattedMessage());
-        map.put("logger", event.getLoggerName());
-        map.put("level", event.getLevel().toString());
+        LogMessage message = new LogMessage();
+        message.put("message", event.getFormattedMessage());
+        message.put("logger", event.getLoggerName());
+        message.put("level", event.getLevel().toString());
         IThrowableProxy proxy = event.getThrowableProxy();
         if (proxy != null) {
-            map.put("exception", formatThrowable(proxy));
+            message.put("exception", formatThrowable(proxy));
         }
-        socketManager.send(level, map);
+        message.resolve(this.loggerHandlers);
+        socketManager.send(level, JsonUtils.toJson(message));
     }
 }

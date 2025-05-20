@@ -2,11 +2,7 @@ package cn.handsome.logger.remote;
 
 import ch.qos.logback.core.net.DefaultSocketConnector;
 import ch.qos.logback.core.net.SocketConnector;
-import cn.handsome.core.logger.LoggerHandler;
 import cn.handsome.core.utils.CommonUtils;
-import cn.handsome.core.utils.JsonUtils;
-import cn.handsome.core.utils.MapUtils;
-import cn.handsome.core.utils.TypeUtils;
 import cn.handsome.logger.remote.config.RemoteLoggerProperties;
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +13,12 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * SocketManager for RemoteLogger
@@ -31,10 +30,9 @@ import java.util.concurrent.*;
 public class RemoteLoggerManager {
     private final static String CHARSET = "utf-8";
     private final RemoteLoggerProperties config;
-    private final LoggerHandler[] handlers;
     private final BlockingDeque<String> messageQueue;
 
-    public RemoteLoggerManager(RemoteLoggerProperties config, LoggerHandler[] handlers) {
+    public RemoteLoggerManager(RemoteLoggerProperties config) {
         if (config == null
                 || CommonUtils.isEmpty(config.getHost())
                 || config.getPort() == 0) {
@@ -43,7 +41,6 @@ public class RemoteLoggerManager {
         } else {
             this.config = config;
         }
-        this.handlers = handlers;
         this.messageQueue = new LinkedBlockingDeque<>(this.config.getQueueSize());
         this.start();
     }
@@ -57,34 +54,6 @@ public class RemoteLoggerManager {
                 .build();
         ScheduledExecutorService swapExpiredPool = new ScheduledThreadPoolExecutor(1, factory);
         swapExpiredPool.scheduleAtFixedRate(this::sendRunner, 0, this.config.getInterval(), TimeUnit.SECONDS);
-    }
-
-    private String getMessage(Level level, Object msg) {
-        Map<String, Object> map = new HashMap<>();
-        if (CommonUtils.isNotEmpty(msg)) {
-            if (TypeUtils.isSimple(msg.getClass())) {
-                map.put("message", msg);
-            } else {
-                map = MapUtils.map(msg);
-            }
-        }
-        map.put("level", level);
-        if (CommonUtils.isNotEmpty(config.getProject())) {
-            map.put("project", config.getProject());
-        }
-        if (CommonUtils.isNotEmpty(config.getAppName())) {
-            map.put("app", config.getAppName());
-        }
-        if (CommonUtils.isNotEmpty(this.handlers)) {
-            for (LoggerHandler handler : this.handlers) {
-                try {
-                    handler.complete(map);
-                } catch (Exception ex) {
-                    log.warn("message handler load error:{}", ex.getMessage());
-                }
-            }
-        }
-        return JsonUtils.toJson(map);
     }
 
     public boolean isEnabled(Level level) {
@@ -130,21 +99,20 @@ public class RemoteLoggerManager {
         }
     }
 
-    public void send(Level level, Object msg) {
-        send(level, msg, true);
+    public void send(Level level, String message) {
+        send(level, message, true);
     }
 
-    public void send(Level level, Object msg, boolean checkLevel) {
+    public void send(Level level, String message, boolean checkLevel) {
         if (!this.config.isEnable()) {
             return;
         }
         if (checkLevel && !isEnabled(level)) {
             if (log.isDebugEnabled()) {
-                log.debug(getMessage(level, msg));
+                log.debug(message);
             }
             return;
         }
-        String message = getMessage(level, msg);
         try {
             this.messageQueue.offer(message, 100, TimeUnit.MICROSECONDS);
         } catch (InterruptedException e) {

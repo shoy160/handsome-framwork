@@ -47,7 +47,8 @@ public interface Constants {
     String STR_ANY = "*";
     String STR_SPLIT = ",";
     String STR_SPACE = " ";
-    
+    String DOLLAR = "$";
+
     String CLAIM_USER_ID = "user-id";
     String CLAIM_TENANT_ID = "tenant-id";
     String CLAIM_USERNAME = "user-name";

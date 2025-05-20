@@ -3,11 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.15</version>
-    </parent>
+    <!--    <parent>-->
+    <!--        <groupId>org.springframework.boot</groupId>-->
+    <!--        <artifactId>spring-boot-starter-parent</artifactId>-->
+    <!--        <version>2.7.15</version>-->
+    <!--    </parent>-->
     <groupId>cn.handsome.framework</groupId>
     <artifactId>framework</artifactId>
     <name>${project.artifactId}</name>
@@ -19,10 +19,16 @@
     <properties>
         <version.framework>1.1.7</version.framework>
         <version.java>1.8</version.java>
-        <version.springboot>2.7.15</version.springboot>
-        <version.hutool>5.8.21</version.hutool>
+        <version.spring>5.3.39</version.spring>
+        <version.springboot>2.7.18</version.springboot>
+        <version.hutool>5.8.25</version.hutool>
         <version.compile>8</version.compile>
         <skipTests>true</skipTests>
+        <version.logback>1.4.12</version.logback>
+        <version.lombok>1.18.28</version.lombok>
+        <version.jackson>2.18.3</version.jackson>
+        <version.junit>5.12.0</version.junit>
+        <version.slf4j>1.7.36</version.slf4j>
     </properties>
     <modules>
         <module>handsome-core</module>
@@ -39,11 +45,27 @@
         <module>handsome-web-jwt</module>
         <module>sample</module>
         <module>tool</module>
+        <module>handsome-script</module>
         <module>handsome-powershell</module>
 
     </modules>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${version.lombok}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
@@ -109,6 +131,36 @@
                 <artifactId>handsome-web-jwt</artifactId>
                 <version>${version.framework}</version>
             </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${version.logback}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${version.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${version.springboot}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -116,6 +168,18 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

@@ -20,7 +20,7 @@ public class ServletLoggerHandler implements LoggerHandler {
     private final static String[] TOKEN_HEADERS = new String[]{"Token", "Jwt-Token", "Authorization"};
 
     @Override
-    public void complete(Map<String, Object> message) {
+    public void render(Map<String, Object> message) {
         if (null == message) {
             return;
         }

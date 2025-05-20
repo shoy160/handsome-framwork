@@ -1,11 +1,10 @@
 package cn.handsome.sdk.im.model.callback;
 
 import cn.handsome.sdk.im.model.enums.PlatformEnum;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * @author shoy

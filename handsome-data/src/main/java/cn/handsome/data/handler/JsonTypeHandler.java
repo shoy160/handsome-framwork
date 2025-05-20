@@ -17,6 +17,7 @@ public class JsonTypeHandler<T> extends AbstractJsonTypeHandler<T> {
     private final Class<T> type;
 
     public JsonTypeHandler(Class<T> type) {
+        super(type);
         if (type == null) {
             throw new NullPointerException("Type argument cannot be null");
         }
@@ -24,7 +25,7 @@ public class JsonTypeHandler<T> extends AbstractJsonTypeHandler<T> {
     }
 
     @Override
-    protected T parse(String json) {
+    public T parse(String json) {
         if (StrUtil.isBlank(json)) {
             return null;
         }
@@ -32,7 +33,7 @@ public class JsonTypeHandler<T> extends AbstractJsonTypeHandler<T> {
     }
 
     @Override
-    protected String toJson(T obj) {
+    public String toJson(T obj) {
         if (null == obj) {
             return null;
         }
