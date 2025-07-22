@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cn.handsome.framework</groupId>
-        <artifactId>sample</artifactId>
-        <version>1.0-SHOTSNAP</version>
+        <artifactId>framework</artifactId>
+        <version>1.1.7</version>
     </parent>
 
-    <artifactId>handsome-demo-config</artifactId>
+    <artifactId>handsome-ai</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,15 +17,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>cn.handsome.framework</groupId>
-            <artifactId>handsome-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${version.springboot}</version>
-        </dependency>
-    </dependencies>
 </project>

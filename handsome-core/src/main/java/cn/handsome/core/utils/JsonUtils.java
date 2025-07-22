@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 
@@ -115,6 +116,20 @@ public class JsonUtils {
         }
         try {
             ObjectMapper mapper = getMapper();
+            return mapper.writeValueAsString(source);
+        } catch (Exception ex) {
+            log.warn("json序列化异常", ex);
+            return Constants.STR_EMPTY;
+        }
+    }
+
+    public static String toPrettyJson(Object source) {
+        if (Objects.isNull(source)) {
+            return null;
+        }
+        try {
+            ObjectMapper mapper = getMapper().copy();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             return mapper.writeValueAsString(source);
         } catch (Exception ex) {
             log.warn("json序列化异常", ex);
