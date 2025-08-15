@@ -1,12 +1,15 @@
 package cn.handsome.web.swagger;
 
+import cn.handsome.core.Constants;
 import cn.handsome.core.enums.TimestampType;
+import cn.handsome.web.config.BaseProperties;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.handsome.core.Constants;
-import cn.handsome.web.config.BaseProperties;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.*;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.schema.Example;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ParameterType;

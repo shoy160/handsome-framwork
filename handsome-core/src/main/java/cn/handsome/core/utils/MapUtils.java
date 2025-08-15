@@ -1,21 +1,23 @@
 package cn.handsome.core.utils;
 
 import cn.handsome.core.Constants;
-import cn.handsome.core.lang.Tuple;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -30,7 +32,9 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class MapUtils {
-    private static final Pattern ARRAY_PATTERN = PatternPool.get("\\[(\\d+)\\]$", Pattern.DOTALL);
+    private static final String REG_PATH_SPLIT = "\\.";
+    private static final String REG_PATH_ARRAY = "\\[(\\d+)\\]$";
+    private static final Pattern PATH_PATTERN = PatternPool.get(REG_PATH_ARRAY, Pattern.DOTALL);
 
     public static Map<String, Object> map(Object obj) {
         return map(obj, null);
@@ -147,26 +151,114 @@ public class MapUtils {
         return builder.toString();
     }
 
-    public static <T> T getValueByPath(Map<String, Object> map, Class<T> clazz, String paths) {
-        return getValue(map, clazz, paths.split("\\."));
+    public static <T> T getValue(
+            Map<String, Object> map, String keyOrPath, Class<T> clazz, T defaultValue
+    ) {
+        T value = getValue(map, keyOrPath, clazz);
+        return Objects.isNull(value) ? defaultValue : value;
     }
 
-    public static <T> T getValue(Map<String, Object> map, Class<T> clazz, String... paths) {
-        Object currentValue = getValue(map, paths);
+    public static <T> T getValue(Map<String, Object> map, String keyOrPath, Class<T> clazz) {
+        if (StrUtil.isBlank(keyOrPath)) {
+            return null;
+        }
+        Object currentValue = get(map, keyOrPath);
         return Objects.isNull(currentValue) ? null : Convert.convert(clazz, currentValue);
     }
 
-    public static Object getValue(Map<String, Object> map, String... paths) {
-        if (MapUtil.isEmpty(map)) {
-            return null;
+    public static String getStr(Map<String, Object> map, String keyOrPath) {
+        return getValue(map, keyOrPath, String.class);
+    }
+
+    public static String getStr(Map<String, Object> map, String keyOrPath, String defValue) {
+        return getValue(map, keyOrPath, String.class, defValue);
+    }
+
+    public static Integer getInt(Map<String, Object> map, String keyOrPath) {
+        return getValue(map, keyOrPath, Integer.class);
+    }
+
+    public static Long getLong(Map<String, Object> map, String keyOrPath) {
+        return getValue(map, keyOrPath, Long.class);
+    }
+
+    public static boolean getBool(Map<String, Object> map, String keyOrPath) {
+        Boolean value = getValue(map, keyOrPath, Boolean.class);
+        return Objects.nonNull(value) && value;
+    }
+
+    public static boolean getBool(Map<String, Object> map, String keyOrPath, boolean defValue) {
+        return getValue(map, keyOrPath, Boolean.class, defValue);
+    }
+
+    public static boolean contains(Map<String, Object> map, String... paths) {
+        if (MapUtil.isEmpty(map) || ArrayUtil.isEmpty(paths)
+                || Arrays.stream(paths).allMatch(StrUtil::isBlank)) {
+            return false;
         }
-        Pattern pattern = PatternPool.get("\\[(\\d+)\\]$", Pattern.DOTALL);
+        paths = Arrays.stream(paths)
+                .filter(StrUtil::isNotBlank)
+                .flatMap(t -> Arrays.stream(t.split(REG_PATH_SPLIT)))
+                .filter(StrUtil::isNotBlank)
+                .toArray(String[]::new);
+        Pattern pattern = PatternPool.get(REG_PATH_ARRAY, Pattern.DOTALL);
         Object currentValue = map;
         for (String path : paths) {
-            if (!(currentValue instanceof Map)) {
+            Map<String, Object> currentMap = map(currentValue);
+            if (MapUtil.isEmpty(currentMap)) {
+                return false;
+            }
+            Matcher matcher = pattern.matcher(path);
+            if (matcher.find()) {
+                //下标处理
+                int index = Convert.toInt(matcher.group(1));
+                String key = path.replace(matcher.group(0), Constants.STR_EMPTY);
+                Object value = currentMap.get(key);
+                if (!TypeUtils.isArray(value)) {
+                    return false;
+                }
+                if (value instanceof Iterable) {
+                    int i = 0;
+                    boolean match = false;
+                    for (Object item : (Iterable<?>) value) {
+                        if (Objects.equals(i++, index)) {
+                            currentValue = item;
+                            match = true;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        continue;
+                    }
+                    return false;
+                }
+            }
+            if (currentMap.containsKey(path)) {
+                currentValue = currentMap.get(path);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static Object get(Map<String, Object> map, String... paths) {
+        if (MapUtil.isEmpty(map) || ArrayUtil.isEmpty(paths)
+                || Arrays.stream(paths).allMatch(StrUtil::isBlank)) {
+            return null;
+        }
+        paths = Arrays.stream(paths)
+                .filter(StrUtil::isNotBlank)
+                .flatMap(t -> Arrays.stream(t.split(REG_PATH_SPLIT)))
+                .filter(StrUtil::isNotBlank)
+                .toArray(String[]::new);
+        Pattern pattern = PatternPool.get(REG_PATH_ARRAY, Pattern.DOTALL);
+        Object currentValue = map;
+        for (String path : paths) {
+            Map<String, Object> currentMap = map(currentValue);
+            if (MapUtil.isEmpty(currentMap)) {
                 return null;
             }
-            Map<String, Object> currentMap = Convert.toMap(String.class, Object.class, currentValue);
             Matcher matcher = pattern.matcher(path);
             if (matcher.find()) {
                 //下标处理
@@ -176,33 +268,43 @@ public class MapUtils {
                 if (!TypeUtils.isArray(value)) {
                     return null;
                 }
-                ArrayList<?> arrayList = (ArrayList<?>) value;
-                if (index >= arrayList.size()) {
+                if (value instanceof Iterable) {
+                    int i = 0;
+                    boolean match = false;
+                    for (Object item : (Iterable<?>) value) {
+                        if (Objects.equals(i++, index)) {
+                            currentValue = item;
+                            match = true;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        continue;
+                    }
                     return null;
                 }
-                currentValue = arrayList.get(index);
-                continue;
             }
             currentValue = currentMap.get(path);
         }
         return currentValue;
     }
 
-    public static boolean setValue(Map<String, Object> map, String paths, Object value) {
-        return setValue(map, value, paths.split("\\."));
+    public static boolean set(Map<String, Object> map, String keyOrPath, Object value) {
+        return set(map, value, keyOrPath.split("\\."));
     }
 
-    public static boolean setValue(Map<String, Object> map, Object value, String... paths) {
-        return setValue(map, value, true, paths);
+    public static boolean set(
+            Map<String, Object> map, Object value, String... paths
+    ) {
+        return set(map, value, true, paths);
     }
 
-    public static boolean setValue(
+    public static boolean set(
             Map<String, Object> map, Object value, boolean initArray, String... paths
     ) {
         if (Objects.isNull(map)) {
             return false;
         }
-        Pattern pattern = PatternPool.get("\\[(\\d+)\\]$", Pattern.DOTALL);
         Object currentValue = map;
         final int pathLength = paths.length;
         for (int i = 0; i < pathLength; i++) {
@@ -211,8 +313,8 @@ public class MapUtils {
                 return false;
             }
             boolean isLatestPath = Objects.equals(i, pathLength - 1);
-            Map<String, Object> currentMap = (Map<String, Object>) currentValue;
-            Matcher matcher = pattern.matcher(path);
+            Map<String, Object> currentMap = MapUtils.map(currentValue);
+            Matcher matcher = PATH_PATTERN.matcher(path);
             if (matcher.find()) {
                 //下标处理
                 int index = Convert.toInt(matcher.group(1));
@@ -225,7 +327,11 @@ public class MapUtils {
                 if (!TypeUtils.isArray(arrayValue)) {
                     return false;
                 }
-                ArrayList<Object> arrayList = (ArrayList<Object>) arrayValue;
+                List<Object> arrayList = new ArrayList<>();
+                if (arrayValue instanceof Iterable) {
+                    ((Iterable<?>) arrayValue).forEach(arrayList::add);
+                    currentMap.put(key, arrayList);
+                }
                 if (isLatestPath) {
                     if (index <= arrayList.size() - 1) {
                         arrayList.set(index, value);
@@ -261,19 +367,45 @@ public class MapUtils {
             return null;
         }
         for (String key : keys) {
-            T value = MapUtil.get(data, key, clazz);
-            if (ObjectUtil.isNotEmpty(value)) {
+            T value = MapUtils.getValue(data, key, clazz);
+            if (ObjUtil.isNotEmpty(value)) {
                 return value;
             }
         }
         return null;
     }
 
-    public static String tryGetStrValue(Map<String, Object> data, String... keys) {
+    /**
+     * 尝试获取 key 值，兼容不同命名风格
+     *
+     * @param data data
+     * @param key  key
+     * @return value
+     */
+    public static Object tryGet(Map<String, Object> data, String key) {
+        if (StrUtil.isBlank(key) || MapUtil.isEmpty(data)) {
+            return null;
+        }
+        Object value = get(data, key);
+        if (Objects.nonNull(value)) {
+            return value;
+        }
+        String underLineKey = StrUtil.toUnderlineCase(key);
+        if (!key.equals(underLineKey) && Objects.nonNull(value = get(data, underLineKey))) {
+            return value;
+        }
+        String camelCaseKey = StrUtil.toCamelCase(key);
+        if (!key.equals(camelCaseKey) && Objects.nonNull(value = get(data, camelCaseKey))) {
+            return value;
+        }
+        return null;
+    }
+
+    public static String tryGetStr(Map<String, Object> data, String... keys) {
         return tryGetValue(String.class, data, keys);
     }
 
-    public static Object popValue(Map<String, Object> data, String... keys) {
+    public static Object pop(Map<String, Object> data, String... keys) {
         if (MapUtil.isEmpty(data)) {
             return null;
         }
@@ -286,14 +418,65 @@ public class MapUtils {
         return null;
     }
 
-    private static Tuple<String, Integer> getPathKey(String path) {
-        Matcher matcher = ARRAY_PATTERN.matcher(path);
-        if (matcher.find()) {
-            //下标处理
-            int index = Convert.toInt(matcher.group(1));
-            String key = path.replace(matcher.group(0), Constants.STR_EMPTY);
-            return Tuple.of(key, index);
+    public static <T> T popValue(Map<String, Object> data, Class<T> clazz, String... keys) {
+        Object value = pop(data, keys);
+        if (Objects.isNull(value)) {
+            return null;
         }
-        return Tuple.of(path, null);
+        if (TypeUtils.isSimple(clazz)) {
+            return Convert.convert(clazz, value);
+        }
+        return BeanUtil.toBeanIgnoreError(value, clazz);
+    }
+
+    public static String popStrWithDef(Map<String, Object> data, String defValue, String... keys) {
+        String value = popValue(data, String.class, keys);
+        return StrUtil.isBlank(value) ? defValue : value;
+    }
+
+    public static String popStr(Map<String, Object> data, String... keys) {
+        return popValue(data, String.class, keys);
+    }
+
+    /**
+     * 反转 Map
+     * value -> key, key -> value
+     */
+    public static <K, V> Map<V, K> inversion(Map<K, V> map) {
+        if (MapUtil.isEmpty(map)) {
+            return new HashMap<>(0);
+        }
+        return map.entrySet().stream()
+                .collect(HashMap::new, (k, v) -> k.put(v.getValue(), v.getKey()), HashMap::putAll);
+    }
+
+    public static Map<String, Object> getMapPure(Object map) {
+        Map<String, Object> config = new HashMap<>(map(map));
+        config.remove("resource");
+        config.remove("operation");
+        return config;
+    }
+
+    public static <T, V> Map<T, V> combine(Map<T, V> map, Map<T, V> otherMap, boolean override) {
+        Map<T, V> result = Objects.isNull(map) ? new HashMap<>(0) : new HashMap<>(map);
+        if (override) {
+            result.putAll(otherMap);
+        } else {
+            otherMap.forEach(result::putIfAbsent);
+        }
+        return result;
+    }
+
+    public static <T, V> Map<T, V> combine(Map<T, V> map, Map<T, V> otherMap) {
+        return combine(map, otherMap, true);
+    }
+
+    @SafeVarargs
+    public static <T, V> Map<T, V> combine(Map<T, V> map, boolean override, Map<T, V>... otherMaps) {
+        Map<T, V> result = Objects.isNull(map) ? new HashMap<>(0) : new HashMap<>(map);
+        for (Map<T, V> otherMap : otherMaps) {
+            combine(result, otherMap, override);
+        }
+        return result;
     }
 }

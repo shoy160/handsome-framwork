@@ -47,7 +47,9 @@ public class CompareFactory {
 
     private CompareFactory() {
         compareMap = new HashMap<>();
-        Set<Class<?>> classes = ReflectUtils.findClasses(ICompare.class::isAssignableFrom);
+        Set<Class<?>> classes = ReflectUtils.findClasses(
+                clazz -> TypeUtils.isAssignableFrom(clazz, ICompare.class)
+        );
         for (Class<?> clazz : classes) {
             ICompare instance = (ICompare) ReflectUtil.newInstance(clazz);
             compareMap.put(instance.getOperation(), instance);
@@ -179,7 +181,7 @@ public class CompareFactory {
         if (key.contains(Constants.DOLLAR)) {
             return evalScript(data, context, key);
         }
-        return MapUtils.getValue(data, key);
+        return MapUtils.get(data, key);
     }
 
     private Object resolveContext(Map<String, Object> data, Map<String, Object> context, Object value) {

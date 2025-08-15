@@ -5,7 +5,6 @@ import cn.handsome.core.utils.MapUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -75,7 +74,7 @@ public class MapUtilsTest {
         String paths = "inputParameters.configuration.list[1]";
 //        String paths = "forkTasks[1]";
         String value =
-                MapUtils.getValueByPath(this.currentMap, String.class, paths);
+                MapUtils.getStr(this.currentMap, paths);
         log.info("value: {}", value);
     }
 
@@ -84,7 +83,7 @@ public class MapUtilsTest {
         String paths = "inputParameters.$view.position.y";
 //        String paths = "inputParameters.configuration.list[1]";
 //        String paths = "forkTasks[1]";
-        MapUtils.setValue(this.currentMap, paths, 459);
-        log.info("value: {}", MapUtils.getValueByPath(this.currentMap, Double.class, paths));
+        MapUtils.set(this.currentMap, paths, 459);
+        log.info("value: {}", MapUtils.getValue(this.currentMap, paths, Double.class));
     }
 }

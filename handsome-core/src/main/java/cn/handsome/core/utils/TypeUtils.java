@@ -1,5 +1,6 @@
 package cn.handsome.core.utils;
 
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
@@ -124,6 +125,7 @@ public class TypeUtils {
     public static boolean isArray(Class<?> clazz) {
         return clazz.isArray() || Collection.class.isAssignableFrom(clazz);
     }
+
     public static boolean isArray(Object value) {
         if (Objects.isNull(value)) {
             return false;
@@ -137,5 +139,17 @@ public class TypeUtils {
 
     public static boolean isBoolean(Class<?> clazz) {
         return clazz.equals(Boolean.class);
+    }
+
+    public static boolean isNonAbstract(Class<?> clazz) {
+        return !isAbstract(clazz) && !clazz.isInterface();
+    }
+
+    public static boolean isAbstract(Class<?> clazz) {
+        return Modifier.isAbstract(clazz.getModifiers());
+    }
+
+    public static boolean isAssignableFrom(Class<?> clazz, Class<?> superClass) {
+        return superClass.isAssignableFrom(clazz) && isNonAbstract(clazz);
     }
 }

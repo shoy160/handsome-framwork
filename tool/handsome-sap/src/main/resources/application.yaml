@@ -1,0 +1,12 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+#sap:
+#  credentials:
+#    vanke:
+#      host: xxx
+#      system-number: 00
+#      client: 360
+#      username: xxx
+#      password: xxx

@@ -2,7 +2,7 @@ package cn.handsome.script.test;
 
 import cn.handsome.script.IScript;
 import cn.handsome.script.impl.GraalvmScript;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;

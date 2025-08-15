@@ -18,5 +18,6 @@
         <module>handsome-swagger</module>
         <module>handsome-tool</module>
         <module>handsome-code</module>
+        <module>handsome-sap</module>
     </modules>
 </project>
