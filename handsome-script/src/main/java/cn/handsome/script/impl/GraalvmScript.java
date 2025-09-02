@@ -37,18 +37,21 @@ public class GraalvmScript extends BaseScript implements AutoCloseable {
         Context context = getContext();
         // 获取全局对象
         Value global = context.getBindings("js");
-        if (Objects.nonNull(variables) && !variables.isEmpty()) {
-            // 定义一个安全的函数供 JavaScript 调用
-            variables.forEach(global::putMember);
+        try {
+            if (Objects.nonNull(variables) && !variables.isEmpty()) {
+                // 定义一个安全的函数供 JavaScript 调用
+                variables.forEach(global::putMember);
+            }
+            // 要执行的 JavaScript 代码
+            Source source = Source.create("js", resolveScript(expression));
+            Value result = context.eval(source);
+            return result.as(clazz);
+        } finally {
+            if (Objects.nonNull(variables) && !variables.isEmpty()) {
+                // 运行完成，清理全局变量
+                variables.keySet().forEach(global::removeMember);
+            }
         }
-        // 要执行的 JavaScript 代码
-        Source source = Source.create("js", resolveScript(expression));
-        Value result = context.eval(source);
-        if (Objects.nonNull(variables) && !variables.isEmpty()) {
-            // 运行完成，清理全局变量
-            variables.keySet().forEach(global::removeMember);
-        }
-        return result.as(clazz);
     }
 
     private Context createContext() {

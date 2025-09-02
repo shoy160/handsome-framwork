@@ -1,10 +1,13 @@
 package cn.handsome.script.test;
 
+import cn.handsome.core.utils.JsonUtils;
 import cn.handsome.script.IScript;
 import cn.handsome.script.impl.GraalvmScript;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,5 +33,15 @@ public class ScriptTest {
             System.out.printf("%s: %s%n", result.getClass().getSimpleName(), result);
         }
 //        log.info("result: {}", result);
+    }
+
+    @Test
+    public void arrayTest() {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("a", 12);
+        variables.put("b", Arrays.asList("aaaa", "bbbb"));
+        Object result = this.script.eval("Array.from(b).concat('addd')", variables);
+
+        System.out.printf("%s: %s%n", result.getClass().getSimpleName(), JsonUtils.toPrettyJson(result));
     }
 }

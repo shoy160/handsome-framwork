@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:25432/db_handsome
+    username: postgres
+    password: a123456
+    driver-class-name: org.postgresql.Driver
+  ai:
+    model:
+      chat: ollama
+    ollama:
+      init:
+        pull-model-strategy: when_missing # 下载策略
+        embedding:
+          additional-models:
+            - mxbai-embed-large
+            - nomic-embed-text
+      base-url: http://localhost:11434
+      chat:
+        model: qwen2:7b
+    #    embedding:
+    #      transformer:
+    #        onnx:
+    #          modelUri: classpath:/shibing624_text2vec-base-chinese/onnx/model.onnx
+    #        tokenizer:
+    #          uri: classpath:/shibing624_text2vec-base-chinese/onnx/tokenizer.json
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1024
+        max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
+server:
+  port: 8888
