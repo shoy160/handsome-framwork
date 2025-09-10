@@ -231,10 +231,13 @@ public class SapRfcHelper {
         List<String> errors = new ArrayList<>(list.size());
         for (Map<String, Object> item : list) {
             String type = MapUtil.getStr(item, "TYPE");
-            String message = MapUtil.getStr(item, "MESSAGE");
             String[] errorTypes = {"E", "A"};
             if (ArrayUtil.contains(errorTypes, type)) {
-                errors.add(message);
+                String system = MapUtil.getStr(item, "SYSTEM");
+                String number = MapUtil.getStr(item, "NUMBER");
+                String field = MapUtil.getStr(item, "FIELD");
+                String message = MapUtil.getStr(item, "MESSAGE");
+                errors.add(String.format("%s_%s: %s_%s", system, number, field, message));
             }
         }
         if (CollUtil.isNotEmpty(errors)) {

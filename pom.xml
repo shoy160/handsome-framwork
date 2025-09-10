@@ -3,21 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--    <parent>-->
-    <!--        <groupId>org.springframework.boot</groupId>-->
-    <!--        <artifactId>spring-boot-starter-parent</artifactId>-->
-    <!--        <version>2.7.15</version>-->
-    <!--    </parent>-->
     <groupId>cn.handsome.framework</groupId>
     <artifactId>framework</artifactId>
     <name>${project.artifactId}</name>
-    <version>1.1.7</version>
+    <version>${version.framework}</version>
     <packaging>pom</packaging>
     <description>
         handsome cloud framework
     </description>
     <properties>
-        <version.framework>1.1.7</version.framework>
+        <!-- 源码文件编码（.java 等） -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 资源文件编码（.properties, .xml 等） -->
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- 编译时使用的字符编码 -->
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <client.java.version>1.8</client.java.version>
+        <version.framework>1.1.8-SNAPSHOT</version.framework>
         <version.java>1.8</version.java>
         <version.spring>5.3.39</version.spring>
         <version.springboot>2.7.18</version.springboot>
@@ -33,25 +35,24 @@
         <!--        <version.slf4j>2.0.17</version.slf4j>-->
     </properties>
     <modules>
-        <module>handsome-core</module>
-        <module>handsome-data</module>
-        <module>handsome-logger-remote</module>
-        <module>handsome-cache</module>
-        <module>handsome-thrift</module>
-        <module>handsome-rocket</module>
-        <module>handsome-rabbit</module>
-        <module>handsome-nacos</module>
-        <module>handsome-sdk-im</module>
-        <module>handsome-sdk-payment</module>
-        <module>handsome-web</module>
-        <module>handsome-web-jwt</module>
-        <module>sample</module>
+        <module>core/handsome-core</module>
+        <module>core/handsome-data</module>
+        <module>core/handsome-logger-remote</module>
+        <module>core/handsome-cache</module>
+        <module>core/handsome-thrift</module>
+        <module>core/handsome-rocket</module>
+        <module>core/handsome-rabbit</module>
+        <module>core/handsome-nacos</module>
+        <module>core/handsome-sdk-im</module>
+        <module>core/handsome-sdk-payment</module>
+        <module>core/handsome-web</module>
+        <module>core/handsome-web-jwt</module>
+        <module>core/handsome-script</module>
+        <module>core/handsome-powershell</module>
         <module>tool</module>
-        <module>handsome-script</module>
-        <module>handsome-powershell</module>
-        <module>handsome-ai</module>
-        <module>workflow</module>
-
+        <!--        <module>workflow</module>-->
+        <!--        <module>handsome-ai</module>-->
+        <!--        <module>sample</module>-->
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -5,7 +5,8 @@
     <parent>
         <groupId>cn.handsome.framework</groupId>
         <artifactId>framework</artifactId>
-        <version>1.1.7</version>
+        <version>${version.framework}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>workflow</artifactId>

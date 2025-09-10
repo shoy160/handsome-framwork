@@ -5,7 +5,8 @@
     <parent>
         <artifactId>framework</artifactId>
         <groupId>cn.handsome.framework</groupId>
-        <version>1.1.7</version>
+        <version>${version.framework}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>tool</artifactId>
@@ -19,5 +20,6 @@
         <module>handsome-tool</module>
         <module>handsome-code</module>
         <module>handsome-sap</module>
+        <module>handsome-scim</module>
     </modules>
 </project>
