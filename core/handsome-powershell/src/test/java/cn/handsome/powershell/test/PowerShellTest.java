@@ -1,7 +1,7 @@
 package cn.handsome.powershell.test;
 
 import cn.handsome.powershell.PowerShellExecutor;
-import cn.handsome.powershell.PowerShellServer;
+import cn.handsome.powershell.model.PowerShellServer;
 
 import java.util.Arrays;
 import java.util.HashMap;
