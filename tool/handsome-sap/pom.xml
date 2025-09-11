@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tool</artifactId>
         <groupId>cn.handsome.framework</groupId>
-        <version>${version.framework}</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>handsome-sap</artifactId>

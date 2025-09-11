@@ -6,7 +6,7 @@
     <parent>
         <groupId>cn.handsome.framework</groupId>
         <artifactId>framework</artifactId>
-        <version>${version.framework}</version>
+        <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>handsome-powershell</artifactId>

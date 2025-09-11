@@ -6,7 +6,7 @@
     <groupId>cn.handsome.framework</groupId>
     <artifactId>framework</artifactId>
     <name>${project.artifactId}</name>
-    <version>${version.framework}</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <description>
         handsome cloud framework
@@ -19,7 +19,7 @@
         <!-- 编译时使用的字符编码 -->
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <client.java.version>1.8</client.java.version>
-        <version.framework>1.1.8-SNAPSHOT</version.framework>
+        <revision>1.1.8-SNAPSHOT</revision>
         <version.java>1.8</version.java>
         <version.spring>5.3.39</version.spring>
         <version.springboot>2.7.18</version.springboot>
@@ -80,62 +80,62 @@
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-core</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-logger-remote</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-cache</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-data</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-rocket</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-rabbit</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-sdk-im</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-sdk-payment</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-nacos</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-thrift</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-web</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>cn.handsome.framework</groupId>
                 <artifactId>handsome-web-jwt</artifactId>
-                <version>${version.framework}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
