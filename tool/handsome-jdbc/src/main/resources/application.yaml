@@ -1,0 +1,8 @@
+server:
+  port: 8087
+  tomcat:
+    max-http-form-post-size: 200MB
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

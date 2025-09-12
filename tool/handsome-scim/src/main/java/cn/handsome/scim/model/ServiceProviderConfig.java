@@ -2,7 +2,10 @@ package cn.handsome.scim.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +15,9 @@ import java.util.List;
  * @author luoyong
  * @date 2025/9/10
  */
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class ServiceProviderConfig extends BaseResource {
     @JsonProperty("documentationUri")
     private String documentationUri;

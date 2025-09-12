@@ -6,7 +6,7 @@
     <parent>
         <groupId>cn.handsome.framework</groupId>
         <artifactId>tool</artifactId>
-        <version>1.1.8-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>handsome-scim</artifactId>
     <packaging>jar</packaging>

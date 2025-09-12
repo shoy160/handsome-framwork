@@ -18,8 +18,9 @@
     <modules>
         <module>handsome-swagger</module>
         <module>handsome-tool</module>
-        <module>handsome-code</module>
+        <module>handsome-powershell</module>
         <module>handsome-sap</module>
         <module>handsome-scim</module>
+        <module>handsome-jdbc</module>
     </modules>
 </project>

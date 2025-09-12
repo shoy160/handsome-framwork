@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -25,6 +26,7 @@ import java.util.List;
 @Order(value = 1)
 @Configuration
 @RequiredArgsConstructor
+@ComponentScan(basePackages = "cn.handsome")
 @AutoConfigureAfter(WebMvcAutoConfiguration.class)
 public class HandsomeMvcConfig implements WebMvcConfigurer {
 

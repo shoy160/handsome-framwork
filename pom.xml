@@ -48,7 +48,7 @@
         <module>core/handsome-web</module>
         <module>core/handsome-web-jwt</module>
         <module>core/handsome-script</module>
-        <module>core/handsome-powershell</module>
+        <module>core/handsome-code</module>
         <module>tool</module>
         <!--        <module>workflow</module>-->
         <!--        <module>handsome-ai</module>-->
@@ -170,10 +170,6 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
