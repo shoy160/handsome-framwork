@@ -49,10 +49,10 @@
         <module>core/handsome-web-jwt</module>
         <module>core/handsome-script</module>
         <module>core/handsome-code</module>
+        <module>core/handsome-ai</module>
         <module>tool</module>
         <!--        <module>workflow</module>-->
-        <!--        <module>handsome-ai</module>-->
-        <!--        <module>sample</module>-->
+        <module>sample</module>
     </modules>
     <dependencyManagement>
         <dependencies>

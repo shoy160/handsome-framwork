@@ -6,7 +6,7 @@
     <parent>
         <groupId>cn.handsome.framework</groupId>
         <artifactId>sample</artifactId>
-        <version>1.0-SHOTSNAP</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>handsome-demo-config</artifactId>

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sample</artifactId>
         <groupId>cn.handsome.framework</groupId>
-        <version>1.0-SHOTSNAP</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>handsome-graphql-web</artifactId>
@@ -25,11 +25,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${version.springboot}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.graphql-java</groupId>-->
-<!--            <artifactId>graphql-java</artifactId>-->
-<!--            <version>17.3</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.graphql-java</groupId>-->
+        <!--            <artifactId>graphql-java</artifactId>-->
+        <!--            <version>17.3</version>-->
+        <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java-tools -->
         <dependency>
             <groupId>com.graphql-java</groupId>
